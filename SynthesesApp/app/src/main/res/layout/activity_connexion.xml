@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.android.group.synthesesapp.ConnexionActivity">
+    tools:context="com.android.group.synthesesapp.Activity.ConnexionActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -20,8 +20,7 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_connexion"
-        android:id="@+id/include" />
+
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
@@ -31,10 +30,20 @@
         android:layout_margin="@dimen/fab_margin"
         app:srcCompat="@android:drawable/ic_dialog_email" />
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:text="TextView" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="?attr/actionBarSize"
+        >
+
+        <GridView
+            android:id="@+id/gridUser"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:numColumns="4"
+            />
+
+    </RelativeLayout>
+
 
 </android.support.design.widget.CoordinatorLayout>
