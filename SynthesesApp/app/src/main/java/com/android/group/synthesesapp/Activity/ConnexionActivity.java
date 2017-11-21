@@ -15,6 +15,7 @@ import android.widget.GridView;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
+import com.android.group.synthesesapp.Adapater.PasswordAdapter;
 import com.android.group.synthesesapp.Adapater.UserAdapter;
 import com.android.group.synthesesapp.Modele.User;
 import com.android.group.synthesesapp.Tool.BackgroundTask;
@@ -66,75 +67,19 @@ public class ConnexionActivity extends AppCompatActivity {
                 AlertDialog.Builder builder = new AlertDialog.Builder(ConnexionActivity.this);
                 builder.setTitle("Symbole");
                 GridView gridSymbole = new GridView(ConnexionActivity.this);
-                final ArrayList<View> listInt = new ArrayList<View>();
-                for (int i=0; i<10; i++) {
-                    TextView tv = new TextView(ConnexionActivity.this);
-                    tv.setText(String.valueOf(i));
-                    listInt.add(tv);
-                }
-                ListAdapter lAdpater = new ListAdapter() {
-                    @Override
-                    public boolean areAllItemsEnabled() {
-                        return false;
-                    }
-
-                    @Override
-                    public boolean isEnabled(int position) {
-                        return false;
-                    }
-
-                    @Override
-                    public void registerDataSetObserver(DataSetObserver observer) {
-
-                    }
-
-                    @Override
-                    public void unregisterDataSetObserver(DataSetObserver observer) {
-
-                    }
-
-                    @Override
-                    public int getCount() {
-                        return 0;
-                    }
-
-                    @Override
-                    public Object getItem(int position) {
-                        return listInt.get(position);
-                    }
-
-                    @Override
-                    public long getItemId(int position) {
-                        return 0;
-                    }
-
-                    @Override
-                    public boolean hasStableIds() {
-                        return false;
-                    }
-
-                    @Override
-                    public View getView(int position, View convertView, ViewGroup parent) {
-                        return listInt.get(position);
-                    }
-
-                    @Override
-                    public int getItemViewType(int position) {
-                        return 0;
-                    }
-
-                    @Override
-                    public int getViewTypeCount() {
-                        return listInt.size();
-                    }
-
-                    @Override
-                    public boolean isEmpty() {
-                        return false;
-                    }
-                };
+                ArrayList<String> listPass = new ArrayList<String>();
+                listPass.add("icone_chat");
+                listPass.add("icone_chien");
+                listPass.add("icone_coccinelle");
+                listPass.add("icone_cochon");
+                listPass.add("icone_grenouille");
+                listPass.add("icone_lapin");
+                listPass.add("icone_penguin");
+                listPass.add("icone_poulet");
+                listPass.add("icone_vache");
+                PasswordAdapter passwordAdapter = new PasswordAdapter(getApplicationContext(), listPass);
                 gridSymbole.setNumColumns(3);
-                gridSymbole.setAdapter(lAdpater);
+                gridSymbole.setAdapter(passwordAdapter);
                 builder.setView(gridSymbole);
                 builder.show();
             }
