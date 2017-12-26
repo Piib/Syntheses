@@ -46,7 +46,7 @@ public class ConnexionActivity extends AppCompatActivity {
         users.add(new User("Borelli", "Geoffrey", 0, "0", "eleve"));
         users.add(new User("Amaterasu", "Landry", 1, "1", "eleve"));
         users.add(new User("Nicola", "Pablo", 2, "2", "eleve"));
-        users.add(new User("Borelli", "Geoffrey", 0, "0", "eleve"));
+        users.add(new User("Borelli", "Geoffrey", 0, "0", "eleve"));cd
         users.add(new User("Amaterasu", "Landry", 1, "1", "eleve"));
         users.add(new User("Nicola", "Pablo", 2, "2", "eleve"));
         users.add(new User("Borelli", "Geoffrey", 0, "0", "eleve"));
