@@ -1,6 +1,7 @@
 package com.android.group.synthesesapp.Activity;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.DataSetObserver;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -46,7 +47,7 @@ public class ConnexionActivity extends AppCompatActivity {
         users.add(new User("Borelli", "Geoffrey", 0, "0", "eleve"));
         users.add(new User("Amaterasu", "Landry", 1, "1", "eleve"));
         users.add(new User("Nicola", "Pablo", 2, "2", "eleve"));
-        users.add(new User("Borelli", "Geoffrey", 0, "0", "eleve"));cd
+        users.add(new User("Borelli", "Geoffrey", 0, "0", "eleve"));
         users.add(new User("Amaterasu", "Landry", 1, "1", "eleve"));
         users.add(new User("Nicola", "Pablo", 2, "2", "eleve"));
         users.add(new User("Borelli", "Geoffrey", 0, "0", "eleve"));
@@ -110,6 +111,10 @@ public class ConnexionActivity extends AppCompatActivity {
                         Log.d("choixSymbole", String.valueOf(indexSymbole[0]));
                         if(indexSymbole[0]==position){
                             Toast.makeText(ConnexionActivity.this, "Connexion réussie", Toast.LENGTH_LONG).show();
+                            Intent intent = new Intent(ConnexionActivity.this, Phase_1_Activity.class);
+                            startActivity(intent);
+
+
                         }
                         else {
                             Toast.makeText(ConnexionActivity.this, "Connexion echouée", Toast.LENGTH_LONG).show();
