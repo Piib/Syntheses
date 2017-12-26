@@ -1,8 +1,6 @@
 package com.android.group.synthesesapp.Adapater;
 
 import android.content.Context;
-import android.support.annotation.LayoutRes;
-import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +12,6 @@ import com.android.group.synthesesapp.Modele.User;
 import com.android.group.synthesesapp.R;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by geoffrey on 16/11/17.
@@ -39,6 +36,11 @@ public class UserAdapter extends ArrayAdapter<User> {
 
         final TextView uNom = convertView.findViewById(R.id.nomUser);
         uNom.setText(u.getsNom());
+        final TextView uPrenom = convertView.findViewById(R.id.prenomUser);
+        uPrenom.setText(u.getsPrenom());
+        final ImageView uPhoto = convertView.findViewById(R.id.photoUser);
+        uPhoto.setImageResource(R.drawable.icone_succes);
+
 
         return convertView;
     }

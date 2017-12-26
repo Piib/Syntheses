@@ -1,12 +1,15 @@
 package com.android.group.synthesesapp.Activity;
 
+import android.content.DialogInterface;
 import android.database.DataSetObserver;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -14,6 +17,7 @@ import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ListAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.group.synthesesapp.Adapater.PasswordAdapter;
 import com.android.group.synthesesapp.Adapater.UserAdapter;
@@ -36,24 +40,30 @@ public class ConnexionActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         ArrayList<User> users= new ArrayList<>();
-        users.add(new User("1"));
-        users.add(new User("2"));
-        users.add(new User("3"));
-        users.add(new User("4"));
-        users.add(new User("5"));
-        users.add(new User("6"));
-        users.add(new User("7"));
-        users.add(new User("8"));
-        users.add(new User("9"));
-        users.add(new User("10"));
-        users.add(new User("11"));
-        users.add(new User("12"));
-        users.add(new User("13"));
-        users.add(new User("14"));
-        users.add(new User("15"));
-        users.add(new User("15"));
-        users.add(new User("16"));
-        users.add(new User("17"));
+        users.add(new User("Borelli", "Geoffrey", 0, "0", "eleve"));
+        users.add(new User("Amaterasu", "Landry", 1, "1", "eleve"));
+        users.add(new User("Nicola", "Pablo", 2, "2", "eleve"));
+        users.add(new User("Borelli", "Geoffrey", 0, "0", "eleve"));
+        users.add(new User("Amaterasu", "Landry", 1, "1", "eleve"));
+        users.add(new User("Nicola", "Pablo", 2, "2", "eleve"));
+        users.add(new User("Borelli", "Geoffrey", 0, "0", "eleve"));
+        users.add(new User("Amaterasu", "Landry", 1, "1", "eleve"));
+        users.add(new User("Nicola", "Pablo", 2, "2", "eleve"));
+        users.add(new User("Borelli", "Geoffrey", 0, "0", "eleve"));
+        users.add(new User("Amaterasu", "Landry", 1, "1", "eleve"));
+        users.add(new User("Nicola", "Pablo", 2, "2", "eleve"));
+        users.add(new User("Borelli", "Geoffrey", 0, "0", "eleve"));
+        users.add(new User("Amaterasu", "Landry", 1, "1", "eleve"));
+        users.add(new User("Nicola", "Pablo", 2, "2", "eleve"));
+        users.add(new User("Borelli", "Geoffrey", 0, "0", "eleve"));
+        users.add(new User("Amaterasu", "Landry", 1, "1", "eleve"));
+        users.add(new User("Nicola", "Pablo", 2, "2", "eleve"));
+        users.add(new User("Borelli", "Geoffrey", 0, "0", "eleve"));
+        users.add(new User("Amaterasu", "Landry", 1, "1", "eleve"));
+        users.add(new User("Nicola", "Pablo", 2, "2", "eleve"));
+
+
+
 
         userAdapter = new UserAdapter(getApplicationContext(), users);
 
@@ -63,7 +73,7 @@ public class ConnexionActivity extends AppCompatActivity {
 
         gridUser.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(ConnexionActivity.this);
                 builder.setTitle("Symbole");
                 GridView gridSymbole = new GridView(ConnexionActivity.this);
@@ -80,7 +90,38 @@ public class ConnexionActivity extends AppCompatActivity {
                 PasswordAdapter passwordAdapter = new PasswordAdapter(getApplicationContext(), listPass);
                 gridSymbole.setNumColumns(3);
                 gridSymbole.setAdapter(passwordAdapter);
+                final int[] indexSymbole = {-1};
+                final View[] precedentView = {null};
+                gridSymbole.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        if(precedentView[0] !=null){
+                            precedentView[0].setBackgroundColor(Color.WHITE);
+                        }
+                        precedentView[0] =view;
+                        indexSymbole[0] =position;
+                        view.setBackgroundColor(Color.rgb(3, 183, 0));
+                    }
+                });
                 builder.setView(gridSymbole);
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Log.d("choixSymbole", String.valueOf(indexSymbole[0]));
+                        if(indexSymbole[0]==position){
+                            Toast.makeText(ConnexionActivity.this, "Connexion réussie", Toast.LENGTH_LONG).show();
+                        }
+                        else {
+                            Toast.makeText(ConnexionActivity.this, "Connexion echouée", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+                builder.setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(ConnexionActivity.this, "Connexion annulée", Toast.LENGTH_LONG).show();
+                    }
+                });
                 builder.show();
             }
         });
