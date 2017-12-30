@@ -18,9 +18,11 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 
 import com.android.group.synthesesapp.Adapater.EnonceAdapter;
 import com.android.group.synthesesapp.Adapater.ReformuleAdapter;
@@ -35,7 +37,6 @@ import java.util.Date;
 
 public class Phase_1_Activity extends AppCompatActivity {
 
-    private ImageView mImageView;
     private String mCurrentPhotoPath;
 
     @Override
@@ -65,11 +66,6 @@ public class Phase_1_Activity extends AppCompatActivity {
         //Initialisation listReformulé
         final ArrayList<Entry> reformuleList = new ArrayList<>();
 
-        reformuleList.add(new Entry(4, "typeReformule0", "contenu"));
-        reformuleList.add(new Entry(5, "typeReformule1", "contenu"));
-        reformuleList.add(new Entry(6, "typeReformule2", "contenu"));
-        reformuleList.add(new Entry(7, "typeReformule3", "contenu"));
-
         final ListView listReformule = (ListView) findViewById(R.id.listReformule);
         final ReformuleAdapter reformuleAdapter = new ReformuleAdapter(getBaseContext(), 0, reformuleList);
         listReformule.setAdapter(reformuleAdapter);
@@ -98,6 +94,10 @@ public class Phase_1_Activity extends AppCompatActivity {
                 builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        if(choix[0]==0) {
+                            Entry newEntry = newText(reformuleAdapter);
+                            reformuleList.add(newEntry);
+                        }
                         if(choix[0]==1) {
                             Entry newEntry = newAudio(reformuleAdapter);
                             reformuleList.add(newEntry);
@@ -113,15 +113,25 @@ public class Phase_1_Activity extends AppCompatActivity {
         });
     }
 
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        Log.e("dataError", data.toString());
-//        if (requestCode == 1 && resultCode == RESULT_OK) {
-//            Bundle extras = data.getExtras();
-//            Bitmap imageBitmap = (Bitmap) extras.get("data");
-//            mImageView.setImageBitmap(imageBitmap);
-//        }
-//    }
+    private Entry newText(final ReformuleAdapter reformuleAdapter) {
+        final Entry newText = new Entry(0, "text", null);
+        AlertDialog.Builder builder= new AlertDialog.Builder(Phase_1_Activity.this);
+        builder.setTitle("TEXTE");
+        RelativeLayout content = new RelativeLayout(Phase_1_Activity.this);
+        final EditText textView = new EditText(Phase_1_Activity.this);
+        content.addView(textView);
+        textView.setMinWidth(content.getMeasuredWidth());
+        builder.setView(content);
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                newText.setsContenu(textView.getText().toString());
+                reformuleAdapter.notifyDataSetChanged();
+            }
+        });
+        builder.show();
+        return newText;
+    }
 
     private Entry newAudio(final ReformuleAdapter reformuleAdapter) {
         final Entry newSong = new Entry(0, "son", null);
@@ -209,6 +219,7 @@ public class Phase_1_Activity extends AppCompatActivity {
             }
         }
         Entry newImage = new Entry(0, "image", String.valueOf(photoFile));
+        reformuleAdapter.notifyDataSetChanged();
         return newImage;
     }
 
