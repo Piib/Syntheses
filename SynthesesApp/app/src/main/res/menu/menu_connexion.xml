@@ -1,0 +1,10 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_connect"
+        android:icon="@drawable/icone_prof"
+        android:title="Connexion"
+        app:showAsAction="ifRoom" />
+
+</menu>

@@ -1,0 +1,16 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_addUser"
+        android:icon="@drawable/icone_ajout_user"
+        android:title="Ajout utilisateur"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_addClass"
+        android:icon="@drawable/icone_ajout_classe"
+        android:title="Ajout d'une classe"
+        app:showAsAction="ifRoom" />
+
+</menu>

@@ -46,6 +46,27 @@
             android:name=".Activity.Phase_1_Activity"
             android:label="@string/title_activity_phase_1_"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".Activity.TeacherMainActivity"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".Activity.ConnexionActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Activity.ConnexionActivity" />
+        </activity>
+        <activity android:name=".Activity.StudentListActivity"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".Activity.TeacherMainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Activity.TeacherMainActivity" />
+        </activity>
+        <activity android:name=".Activity.SyntheseEleve"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".Activity.StudentListActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Activity.StudentListActivity" />
+        </activity>
     </application>
 
 </manifest>

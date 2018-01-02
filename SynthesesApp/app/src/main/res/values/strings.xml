@@ -15,4 +15,8 @@
     </string>
     <string name="title_activity_connexion">ConnexionActivity</string>
     <string name="title_activity_phase_1_">phase_1_Activity</string>
+    <string-array name="profOUeleve">
+        <item>Elève</item>
+        <item>Professeur</item>
+    </string-array>
 </resources>

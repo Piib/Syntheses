@@ -7,10 +7,13 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -22,6 +25,7 @@ import android.widget.Toast;
 
 import com.android.group.synthesesapp.Adapater.PasswordAdapter;
 import com.android.group.synthesesapp.Adapater.UserAdapter;
+import com.android.group.synthesesapp.Fragment.ConnexionFragment;
 import com.android.group.synthesesapp.Modele.User;
 import com.android.group.synthesesapp.Tool.BackgroundTask;
 import com.android.group.synthesesapp.R;
@@ -43,25 +47,25 @@ public class ConnexionActivity extends AppCompatActivity {
         ArrayList<User> users= new ArrayList<>();
         users.add(new User("Borelli", "Geoffrey", 0, "0", "eleve"));
         users.add(new User("Amaterasu", "Landry", 1, "1", "eleve"));
-        users.add(new User("Nicola", "Pablo", 2, "2", "eleve"));
+        users.add(new User("Nicolas", "Pablo", 2, "2", "eleve"));
         users.add(new User("Borelli", "Geoffrey", 0, "0", "eleve"));
         users.add(new User("Amaterasu", "Landry", 1, "1", "eleve"));
-        users.add(new User("Nicola", "Pablo", 2, "2", "eleve"));
+        users.add(new User("Nicolas", "Pablo", 2, "2", "eleve"));
         users.add(new User("Borelli", "Geoffrey", 0, "0", "eleve"));
         users.add(new User("Amaterasu", "Landry", 1, "1", "eleve"));
-        users.add(new User("Nicola", "Pablo", 2, "2", "eleve"));
+        users.add(new User("Nicolas", "Pablo", 2, "2", "eleve"));
         users.add(new User("Borelli", "Geoffrey", 0, "0", "eleve"));
         users.add(new User("Amaterasu", "Landry", 1, "1", "eleve"));
-        users.add(new User("Nicola", "Pablo", 2, "2", "eleve"));
+        users.add(new User("Nicolas", "Pablo", 2, "2", "eleve"));
         users.add(new User("Borelli", "Geoffrey", 0, "0", "eleve"));
         users.add(new User("Amaterasu", "Landry", 1, "1", "eleve"));
-        users.add(new User("Nicola", "Pablo", 2, "2", "eleve"));
+        users.add(new User("Nicolas", "Pablo", 2, "2", "eleve"));
         users.add(new User("Borelli", "Geoffrey", 0, "0", "eleve"));
         users.add(new User("Amaterasu", "Landry", 1, "1", "eleve"));
-        users.add(new User("Nicola", "Pablo", 2, "2", "eleve"));
+        users.add(new User("Nicolas", "Pablo", 2, "2", "eleve"));
         users.add(new User("Borelli", "Geoffrey", 0, "0", "eleve"));
         users.add(new User("Amaterasu", "Landry", 1, "1", "eleve"));
-        users.add(new User("Nicola", "Pablo", 2, "2", "eleve"));
+        users.add(new User("Nicolas", "Pablo", 2, "2", "eleve"));
 
 
 
@@ -155,6 +159,22 @@ public class ConnexionActivity extends AppCompatActivity {
         String [] param = new String[1];
         param[0]="ole";
         bgTask.execute("http://artshared.fr/andev1/base_ws.php");
+    }
+
+    //affiche le menu dans l'action bar
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_connexion, menu);
+        return true;
+    }
+
+    //listener de l'action connexion du menu
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        FragmentManager fm = getSupportFragmentManager();
+        ConnexionFragment dialogFragment = new ConnexionFragment ();
+        dialogFragment.show(fm, "frgament_connexion");
+        return true;
     }
 
 

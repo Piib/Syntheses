@@ -1,0 +1,10 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_addComment"
+        android:icon="@drawable/icone_ajout"
+        android:title="Ajouter un commentaire"
+        app:showAsAction="ifRoom" />
+
+</menu>
