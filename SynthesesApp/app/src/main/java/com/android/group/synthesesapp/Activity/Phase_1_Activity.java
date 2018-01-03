@@ -97,14 +97,18 @@ public class Phase_1_Activity extends AppCompatActivity {
                         if(choix[0]==0) {
                             Entry newEntry = newText(reformuleAdapter);
                             reformuleList.add(newEntry);
+                            reformuleAdapter.notifyDataSetChanged();
                         }
                         if(choix[0]==1) {
                             Entry newEntry = newAudio(reformuleAdapter);
                             reformuleList.add(newEntry);
+                            reformuleAdapter.notifyDataSetChanged();
+
                         }
                         if(choix[0]==2) {
                             Entry newEntry = newImage(reformuleAdapter);
                             reformuleList.add(newEntry);
+                            reformuleAdapter.notifyDataSetChanged();
                         }
                     }
                 });
