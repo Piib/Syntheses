@@ -21,7 +21,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:name=".Tool.MyApplication">
 
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -45,7 +46,8 @@
         <activity
             android:name=".Activity.Phase_1_Activity"
             android:label="@string/title_activity_phase_1_"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
         <activity android:name=".Activity.TeacherMainActivity"
             android:screenOrientation="portrait"
             android:parentActivityName=".Activity.ConnexionActivity" >

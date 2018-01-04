@@ -36,7 +36,7 @@ public class ConnexionFragment extends DialogFragment {
                 //
                 try {
                     Intent intent = new Intent(getActivity(), TeacherMainActivity.class);
-                    intent.putExtra("nomProf", "piib");
+                    intent.putExtra("nomProf", champUtilisateur.getText().toString());
                     startActivity(intent);
                 }catch(Exception e){
                     //Toast.makeText(getActivity(), "", Toast.LENGTH_SHORT).show();
@@ -55,16 +55,6 @@ public class ConnexionFragment extends DialogFragment {
         });
 
         return rootView;
-    }
-
-    //redéfinition de la méthode onDismiss qui renvoie à la méthode du méme nom de ListActivity
-    @Override
-    public void onDismiss(DialogInterface dialog) {
-        super.onDismiss(dialog);
-        final Activity activity = getActivity();
-        if (activity instanceof DialogInterface.OnDismissListener) {
-            ((DialogInterface.OnDismissListener) activity).onDismiss(dialog);
-        }
     }
 }
 

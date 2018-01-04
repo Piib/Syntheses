@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.android.group.synthesesapp.R;
+import com.android.group.synthesesapp.Tool.MyApplication;
 
 import java.util.ArrayList;
 
@@ -27,7 +28,7 @@ public class StudentListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_studentlistactivity);
 
         //titre barre d'action
-        setTitle("Liste des élèves");
+        setTitle("Elèves de " + ((MyApplication) getApplicationContext()).classe);
 
         //appel à la méthode generateListView pour créer la listview
         generateListView();
@@ -61,7 +62,7 @@ public class StudentListActivity extends AppCompatActivity {
                                 long id) {
             String item= (String) eleves_listView.getItemAtPosition(position);
             Intent intent = new Intent(getApplicationContext(), SyntheseEleve.class);
-            intent.putExtra("nomEleve", item);
+            ((MyApplication) getApplicationContext()).eleve=item;
             startActivity(intent);
         }
     };

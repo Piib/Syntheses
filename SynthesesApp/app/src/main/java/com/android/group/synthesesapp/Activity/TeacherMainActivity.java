@@ -15,6 +15,7 @@ import android.widget.ListView;
 import com.android.group.synthesesapp.Fragment.AddClassFragment;
 import com.android.group.synthesesapp.Fragment.AddUserFragment;
 import com.android.group.synthesesapp.R;
+import com.android.group.synthesesapp.Tool.MyApplication;
 
 import java.util.ArrayList;
 
@@ -32,9 +33,14 @@ public class TeacherMainActivity extends AppCompatActivity implements DialogInte
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_teachermainactivity);
 
-        //titre barre d'action
-        setTitle("Liste de vos classes");
+        Intent intentTeacher = getIntent();
+        String nomProf=intentTeacher.getStringExtra("nomProf");
+        if (nomProf != null) {
+            ((MyApplication) getApplicationContext()).nomProf=nomProf;
+        }
 
+        //titre barre d'action
+        setTitle("Classes de " + ((MyApplication) getApplicationContext()).nomProf);
         //appel à la méthode generateListView pour créer la listview
         generateListView();
     }
@@ -67,7 +73,7 @@ public class TeacherMainActivity extends AppCompatActivity implements DialogInte
                                 long id) {
             String item= (String) classes_listView.getItemAtPosition(position);
             Intent intent = new Intent(getApplicationContext(), StudentListActivity.class);
-            intent.putExtra("nomClasse", item);
+            ((MyApplication) getApplicationContext()).classe=item;
             startActivity(intent);
         }
     };
@@ -97,9 +103,13 @@ public class TeacherMainActivity extends AppCompatActivity implements DialogInte
                 return true;
 
             case R.id.action_addClass:
-                FragmentManager fm = getSupportFragmentManager();
+                Bundle bundle = new Bundle();
+                bundle.putString("nomProf", ((MyApplication) getApplicationContext()).nomProf);
+
+                FragmentManager fmClass = getSupportFragmentManager();
                 AddClassFragment dialogFragment = new AddClassFragment ();
-                dialogFragment.show(fm, "frgament_ajout_classe");
+                dialogFragment.setArguments(bundle);
+                dialogFragment.show(fmClass, "frgament_ajout_classe");
                 return true;
         }
         return super.onOptionsItemSelected(item);
