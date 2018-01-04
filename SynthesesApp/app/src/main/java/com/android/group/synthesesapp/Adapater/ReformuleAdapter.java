@@ -47,9 +47,9 @@ public class ReformuleAdapter extends ArrayAdapter<Entry> {
         final Button son = convertView.findViewById(R.id.reformuleSon);
         final ImageView image = convertView.findViewById(R.id.reformuleImage);
 
-        text.setVisibility(View.INVISIBLE);
-        son.setVisibility(View.INVISIBLE);
-        image.setVisibility(View.INVISIBLE);
+        text.setVisibility(View.GONE);
+        son.setVisibility(View.GONE);
+        image.setVisibility(View.GONE);
         switch (e.getsType()){
             case "text" :
                 text.setVisibility(View.VISIBLE);

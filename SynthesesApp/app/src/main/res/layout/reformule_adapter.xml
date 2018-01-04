@@ -11,17 +11,17 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="TextView"
-        android:visibility="invisible"
+        android:visibility="gone"
         tools:layout_editor_absoluteX="163dp"
         tools:layout_editor_absoluteY="246dp"
         tools:ignore="MissingConstraints" />
 
     <ImageView
         android:id="@+id/reformuleImage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:scaleType="fitXY"
-        android:visibility="invisible"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:scaleType="centerInside"
+        android:visibility="gone"
         app:srcCompat="@color/colorPrimaryDark"
         tools:layout_editor_absoluteX="2dp"
         tools:layout_editor_absoluteY="2dp" />
