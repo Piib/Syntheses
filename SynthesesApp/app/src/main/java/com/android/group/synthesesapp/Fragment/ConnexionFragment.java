@@ -1,8 +1,5 @@
 package com.android.group.synthesesapp.Fragment;
 
-import android.app.Activity;
-import android.app.ListActivity;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -60,21 +57,16 @@ public class ConnexionFragment extends DialogFragment {
                 if(nom.matches("") || prenom.matches("") || mdp.matches("")){
                     Toast.makeText(getActivity(), "Un des champs est vide", Toast.LENGTH_SHORT).show();
                 }else{
-                    //new SendPostRequest().execute();
-                    Intent intent = new Intent(getActivity(), TeacherMainActivity.class);
-                    intent.putExtra("nomProf", nom);
-                    intent.putExtra("prenomProf",prenom);
-                    startActivity(intent);
+                    new SendPostRequest().execute();
                 }
             }
         });
 
-        //bouton annuler et listener
+        //bouton annuler et listener (dismiss si cliqué)
         Button annuler = (Button) rootView.findViewById(R.id.annuler);
         annuler.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //dismiss si cliqué
                 dismiss();
             }
         });
@@ -93,9 +85,9 @@ public class ConnexionFragment extends DialogFragment {
                 URL url = new URL("http://193.190.248.154/connexion.php"); // here is your URL path
 
                 JSONObject postDataParams = new JSONObject();
-                postDataParams.put("nomProf", nom);
-                postDataParams.put("prenomProf", prenom);
-                postDataParams.put("mdp", mdp);
+                postDataParams.put("Nom", nom);
+                postDataParams.put("Prenom", prenom);
+                postDataParams.put("Pwd", mdp);
                 Log.e("params",postDataParams.toString());
 
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -147,7 +139,20 @@ public class ConnexionFragment extends DialogFragment {
 
         @Override
         protected void onPostExecute(String result) {
-            Toast.makeText(getActivity(), result, Toast.LENGTH_SHORT).show();
+            if(result.matches("UserX")){
+                Toast.makeText(getActivity(), "Echec de connexion", Toast.LENGTH_SHORT).show();
+            }
+
+            if(result.matches("UserV")){
+                Intent intent = new Intent(getActivity(), TeacherMainActivity.class);
+                intent.putExtra("nomProf", nom);
+                intent.putExtra("prenomProf",prenom);
+                startActivity(intent);
+            }
+
+            if(!result.matches("UserX")&& !result.matches("UserV")){
+                Toast.makeText(getActivity(), result, Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
