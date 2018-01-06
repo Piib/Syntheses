@@ -176,8 +176,8 @@ public class AddClassFragment extends DialogFragment{
 
             if(result.matches("LinkV")){
                 regenerateListView=true;
+                Toast.makeText(getActivity(), "Classe ajoutée avec succès", Toast.LENGTH_SHORT).show();
                 dismiss();
-                //Toast.makeText(getActivity(), "Classe ajoutée avec succès", Toast.LENGTH_SHORT).show();
             }
 
             if(!result.matches("UserX")&& !result.matches("ClassX")&& !result.matches("LinkX")&& !result.matches("LinkV")){

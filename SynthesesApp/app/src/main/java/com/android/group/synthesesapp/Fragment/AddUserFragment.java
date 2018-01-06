@@ -55,7 +55,7 @@ public class AddUserFragment extends DialogFragment {
     Bitmap FixBitmap;
     ByteArrayOutputStream byteArrayOutputStream;
     String ImageName = "image_data" ;
-    String ServerUploadPath ="http://193.190.248.154/testImage.php" ;
+    String ServerUploadPath ="http://193.190.248.154/ajoutImage.php" ;
     byte[] byteArray ;
     String ConvertImage ;
     HttpURLConnection httpURLConnection ;
@@ -102,13 +102,15 @@ public class AddUserFragment extends DialogFragment {
                     champMdp.setVisibility(View.INVISIBLE);
                     champClasse.setVisibility(View.VISIBLE);
                     GetImageFromGalleryButton.setVisibility(View.VISIBLE);
+                    ShowSelectedImage.setVisibility(View.VISIBLE);
                 }else{
                     champMdp.setVisibility(View.VISIBLE);
                     champClasse.setVisibility(View.GONE);
                     champClasse.setVisibility(View.INVISIBLE);
                     GetImageFromGalleryButton.setVisibility(View.GONE);
                     GetImageFromGalleryButton.setVisibility(View.INVISIBLE);
-                    ShowSelectedImage.setImageBitmap(null);
+                    ShowSelectedImage.setVisibility(View.INVISIBLE);
+                    ShowSelectedImage.setVisibility(View.GONE);
                 }
             }
 
@@ -141,8 +143,6 @@ public class AddUserFragment extends DialogFragment {
         ajout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //ajouter entrée à la DB si la champClasse existe pas
-                //ajouter à la liste si la champClasse existe déjà
                 nom=champNom.getText().toString();
                 prenom=champPrenom.getText().toString();
                 classe=champClasse.getText().toString();
@@ -152,8 +152,11 @@ public class AddUserFragment extends DialogFragment {
                     if(nom.matches("") || prenom.matches("") || classe.matches("")){
                         Toast.makeText(getActivity(), "Un des champs est vide", Toast.LENGTH_SHORT).show();
                     }else{
-                        new SendPostRequest().execute();
-                        //UploadImageToServer();
+                        if(ShowSelectedImage.getDrawable()==null){
+                            Toast.makeText(getActivity(), "Ajoutez la photo de profil", Toast.LENGTH_SHORT).show();
+                        }else{
+                            new SendPostRequest().execute();
+                        }
                     }
                 }else{ //prof
                     if(nom.matches("") || prenom.matches("") || mdp.matches("")){
@@ -166,12 +169,11 @@ public class AddUserFragment extends DialogFragment {
             }
         });
 
-        //bouton annuler et listener
+        //bouton annuler et listener (dismiss si cliqué)
         Button annuler = (Button) rootView.findViewById(R.id.annuler);
         annuler.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //dismiss si cliqué
                 dismiss();
             }
         });
@@ -221,6 +223,8 @@ public class AddUserFragment extends DialogFragment {
                 HashMapParams.put(ImageName, ConvertImage);
 
                 HashMapParams.put("nom",nom);
+
+                HashMapParams.put("prenom",prenom);
 
                 String FinalData = imageProcessClass.ImageHttpRequest(ServerUploadPath, HashMapParams);
 
@@ -317,17 +321,17 @@ public class AddUserFragment extends DialogFragment {
 
             try {
                 JSONObject postDataParams = new JSONObject();
-                URL url= new URL("http://193.190.248.154/test.php");
+                URL url= new URL("http://193.190.248.154/ajoutEleve.php");
 
                 if(status==0){ //eleve
                     postDataParams.put("Nom", nom);
                     postDataParams.put("Prenom", prenom);
                     postDataParams.put("NomClasse", classe);
                 }else{ //prof
-                    url = new URL("http://193.190.248.154/ajoutProf.php"); // here is your URL path
-                    postDataParams.put("nom", nom);
-                    postDataParams.put("prenom", prenom);
-                    postDataParams.put("mdp", mdp);
+                    url = new URL("http://193.190.248.154/ajoutProf.php");
+                    postDataParams.put("Nom", nom);
+                    postDataParams.put("Prenom", prenom);
+                    postDataParams.put("Pwd", mdp);
                 }
                 Log.e("params",postDataParams.toString());
 
@@ -380,7 +384,21 @@ public class AddUserFragment extends DialogFragment {
 
         @Override
         protected void onPostExecute(String result) {
-            Toast.makeText(getActivity(), result, Toast.LENGTH_SHORT).show();
+            if(result.matches("UserX")){
+                Toast.makeText(getActivity(), "L'utilisateur existe déjà", Toast.LENGTH_SHORT).show();
+            }
+
+            if(result.matches("LinkV")){
+                Toast.makeText(getActivity(), "Utilisateur ajouté avec succès", Toast.LENGTH_SHORT).show();
+                if(status==0){
+                    UploadImageToServer();
+                }
+                dismiss();
+            }
+
+            if(!result.matches("UserX")&& !result.matches("LinkV")){
+                Toast.makeText(getActivity(), result, Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
