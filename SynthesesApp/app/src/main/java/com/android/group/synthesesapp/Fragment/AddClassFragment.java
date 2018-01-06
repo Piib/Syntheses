@@ -1,6 +1,7 @@
 package com.android.group.synthesesapp.Fragment;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -34,10 +35,12 @@ import com.android.group.synthesesapp.R;
  * Created by Piib on 31-12-17.
  */
 
+//source SendPostRequest, GetPostDataString: https://www.studytutorial.in/android-httpurlconnection-post-and-get-request-tutorial
+
 public class AddClassFragment extends DialogFragment{
     boolean regenerateListView=false;
     EditText champClasse;
-    String classe,nomProf;
+    String classe,nomProf,prenomProf;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -45,29 +48,29 @@ public class AddClassFragment extends DialogFragment{
         getDialog().setTitle("Ajouter une clasee");
 
         nomProf = getArguments().getString("nomProf");
+        prenomProf = getArguments().getString("prenomProf");
 
         champClasse=(EditText) rootView.findViewById(R.id.classe);
 
-        //bouton connexion et listener
+        //bouton ajout et listener
         Button ajout = (Button) rootView.findViewById(R.id.ajouter);
         ajout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //ajouter entrée à la DB si la champClasse existe pas
-                //ajouter à la liste si la champClasse existe déjà
                 classe=champClasse.getText().toString();
-                //regenerateListView=true;
-                new SendPostRequest().execute();
-                //dismiss();
+                if(classe.matches("")){
+                    Toast.makeText(getActivity(), "Entrez le nom de la classe", Toast.LENGTH_SHORT).show();
+                }else{
+                    new SendPostRequest().execute();
+                }
             }
         });
 
-        //bouton annuler et listener
+        //bouton annuler et listener (dismiss si cliqué)
         Button annuler = (Button) rootView.findViewById(R.id.annuler);
         annuler.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //dismiss si cliqué
                 dismiss();
             }
         });
@@ -93,11 +96,12 @@ public class AddClassFragment extends DialogFragment{
 
             try {
 
-                URL url = new URL("http://193.190.248.154/test.php"); // here is your URL path
+                URL url = new URL("http://193.190.248.154/lien_prof_classe.php"); // here is your URL path
 
                 JSONObject postDataParams = new JSONObject();
-                postDataParams.put("nomProf", nomProf);
-                postDataParams.put("classe", classe);
+                postDataParams.put("Nom", nomProf);
+                postDataParams.put("Prenom", prenomProf);
+                postDataParams.put("NomClasse", classe);
                 Log.e("params",postDataParams.toString());
 
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -144,12 +148,41 @@ public class AddClassFragment extends DialogFragment{
             catch(Exception e){
                 return new String("Exception: " + e.getMessage());
             }
-
         }
 
         @Override
-        protected void onPostExecute(String result) {
-            Toast.makeText(getActivity(), result, Toast.LENGTH_SHORT).show();
+        protected void onPostExecute(String result) { //réaction à la réponse du serveur
+            if(result.matches("UserX")){
+                Toast.makeText(getActivity(), "L'utilisateur n'existe pas", Toast.LENGTH_SHORT).show();
+            }
+            if(result.matches("ClassX")){
+                //source: https://stackoverflow.com/questions/10207206/how-to-display-alertdialog-in-a-fragment
+                AlertDialog ad = new AlertDialog.Builder(getActivity())
+                        .create();
+                ad.setCancelable(false);
+                ad.setTitle("Classe non existante");
+                ad.setMessage("La classe n'existe pas. Pour créer une classe créez un elève dans cette classe et ensuite ajoutez la");
+                ad.setButton("OK", new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                ad.show();
+            }
+            if(result.matches("LinkX")){
+                Toast.makeText(getActivity(), "La classe vous est déjà attribuée", Toast.LENGTH_SHORT).show();
+            }
+
+            if(result.matches("LinkV")){
+                regenerateListView=true;
+                dismiss();
+                //Toast.makeText(getActivity(), "Classe ajoutée avec succès", Toast.LENGTH_SHORT).show();
+            }
+
+            if(!result.matches("UserX")&& !result.matches("ClassX")&& !result.matches("LinkX")&& !result.matches("LinkV")){
+                Toast.makeText(getActivity(), result, Toast.LENGTH_SHORT).show();
+            }
         }
     }
 

@@ -11,6 +11,8 @@ import android.app.Application;
 
 public class MyApplication extends Application {
     public String nomProf="";
+    public String prenomProf="";
     public String classe="";
-    public String eleve="";
+    public String nomEleve="";
+    public String prenomEleve="";
 }

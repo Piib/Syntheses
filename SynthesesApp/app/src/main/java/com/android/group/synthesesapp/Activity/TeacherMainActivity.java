@@ -35,12 +35,14 @@ public class TeacherMainActivity extends AppCompatActivity implements DialogInte
 
         Intent intentTeacher = getIntent();
         String nomProf=intentTeacher.getStringExtra("nomProf");
-        if (nomProf != null) {
+        String prenomProf=intentTeacher.getStringExtra("prenomProf");
+        if (nomProf != null && prenomProf != null) {
             ((MyApplication) getApplicationContext()).nomProf=nomProf;
+            ((MyApplication) getApplicationContext()).prenomProf=prenomProf;
         }
 
         //titre barre d'action
-        setTitle("Classes de " + ((MyApplication) getApplicationContext()).nomProf);
+        setTitle("Classes de " + ((MyApplication) getApplicationContext()).nomProf + " " + ((MyApplication) getApplicationContext()).prenomProf);
         //appel à la méthode generateListView pour créer la listview
         generateListView();
     }
@@ -105,6 +107,7 @@ public class TeacherMainActivity extends AppCompatActivity implements DialogInte
             case R.id.action_addClass:
                 Bundle bundle = new Bundle();
                 bundle.putString("nomProf", ((MyApplication) getApplicationContext()).nomProf);
+                bundle.putString("prenomProf",((MyApplication) getApplicationContext()).prenomProf);
 
                 FragmentManager fmClass = getSupportFragmentManager();
                 AddClassFragment dialogFragment = new AddClassFragment ();

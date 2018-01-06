@@ -62,7 +62,11 @@ public class StudentListActivity extends AppCompatActivity {
                                 long id) {
             String item= (String) eleves_listView.getItemAtPosition(position);
             Intent intent = new Intent(getApplicationContext(), SyntheseEleve.class);
-            ((MyApplication) getApplicationContext()).eleve=item;
+            int espace=item.indexOf(" ");
+            String nomEleve=item.substring(0,espace);
+            String prenomEleve=item.substring(espace);
+            ((MyApplication) getApplicationContext()).nomEleve=nomEleve;
+            ((MyApplication) getApplicationContext()).prenomEleve=prenomEleve;
             startActivity(intent);
         }
     };

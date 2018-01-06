@@ -49,16 +49,17 @@ public class AddUserFragment extends DialogFragment {
     Spinner spinner;
     EditText champNom, champPrenom,champClasse, champMdp;
     String nom,prenom,classe,mdp;
+    int status=0;
     Button GetImageFromGalleryButton;
     ImageView ShowSelectedImage;
     Bitmap FixBitmap;
     ByteArrayOutputStream byteArrayOutputStream;
     String ImageName = "image_data" ;
-    String ServerUploadPath ="" ;
+    String ServerUploadPath ="http://193.190.248.154/testImage.php" ;
     byte[] byteArray ;
     String ConvertImage ;
     HttpURLConnection httpURLConnection ;
-    URL url;
+    URL urlImage;
     OutputStream outputStream;
     BufferedWriter bufferedWriter ;
     int RC ;
@@ -146,8 +147,21 @@ public class AddUserFragment extends DialogFragment {
                 prenom=champPrenom.getText().toString();
                 classe=champClasse.getText().toString();
                 mdp=champMdp.getText().toString();
-                new SendPostRequest().execute();
-                //UploadImageToServer();
+                status=spinner.getSelectedItemPosition();
+                if(status==0){ //eleve
+                    if(nom.matches("") || prenom.matches("") || classe.matches("")){
+                        Toast.makeText(getActivity(), "Un des champs est vide", Toast.LENGTH_SHORT).show();
+                    }else{
+                        new SendPostRequest().execute();
+                        //UploadImageToServer();
+                    }
+                }else{ //prof
+                    if(nom.matches("") || prenom.matches("") || mdp.matches("")){
+                        Toast.makeText(getActivity(), "Un des champs est vide", Toast.LENGTH_SHORT).show();
+                    }else{
+                        new SendPostRequest().execute();
+                    }
+                }
                 //dismiss();
             }
         });
@@ -206,6 +220,8 @@ public class AddUserFragment extends DialogFragment {
 
                 HashMapParams.put(ImageName, ConvertImage);
 
+                HashMapParams.put("nom",nom);
+
                 String FinalData = imageProcessClass.ImageHttpRequest(ServerUploadPath, HashMapParams);
 
                 return FinalData;
@@ -222,9 +238,9 @@ public class AddUserFragment extends DialogFragment {
             StringBuilder stringBuilder = new StringBuilder();
 
             try {
-                url = new URL(requestURL);
+                urlImage = new URL(requestURL);
 
-                httpURLConnection = (HttpURLConnection) url.openConnection();
+                httpURLConnection = (HttpURLConnection) urlImage.openConnection();
 
                 httpURLConnection.setReadTimeout(20000);
 
@@ -300,13 +316,19 @@ public class AddUserFragment extends DialogFragment {
         protected String doInBackground(String... arg0) {
 
             try {
-
-                URL url = new URL("http://193.190.248.154/test.php"); // here is your URL path
-
                 JSONObject postDataParams = new JSONObject();
-                postDataParams.put("nom", nom);
-                postDataParams.put("prenom", prenom);
-                postDataParams.put("mdp", mdp);
+                URL url= new URL("http://193.190.248.154/test.php");
+
+                if(status==0){ //eleve
+                    postDataParams.put("Nom", nom);
+                    postDataParams.put("Prenom", prenom);
+                    postDataParams.put("NomClasse", classe);
+                }else{ //prof
+                    url = new URL("http://193.190.248.154/ajoutProf.php"); // here is your URL path
+                    postDataParams.put("nom", nom);
+                    postDataParams.put("prenom", prenom);
+                    postDataParams.put("mdp", mdp);
+                }
                 Log.e("params",postDataParams.toString());
 
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();

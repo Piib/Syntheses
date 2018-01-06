@@ -18,14 +18,13 @@ import com.android.group.synthesesapp.Tool.MyApplication;
  */
 
 public class SyntheseEleve extends AppCompatActivity {
-    private String nomEleve;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_synthseeleve);
 
-        setTitle("Synthèse de " + ((MyApplication) getApplicationContext()).eleve);
+        setTitle("Synthèse de " + ((MyApplication) getApplicationContext()).nomEleve + " "+((MyApplication) getApplicationContext()).prenomEleve);
     }
 
     //affiche le menu dans l'action bar

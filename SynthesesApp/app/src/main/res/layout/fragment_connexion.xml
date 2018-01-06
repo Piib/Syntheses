@@ -7,12 +7,21 @@
     android:orientation="vertical">
 
     <EditText
-        android:id="@+id/utilisateur"
+        android:id="@+id/nom"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:hint="Nom d'utilisateur"
+        android:hint="Nom"
         android:textSize="30dp" />
+
+    <EditText
+        android:id="@+id/prenom"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:hint="Prénom"
+        android:textSize="30dp" />
+
 
     <EditText
         android:id="@+id/mdp"
