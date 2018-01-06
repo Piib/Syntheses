@@ -12,6 +12,24 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import android.os.AsyncTask;
+import android.widget.Toast;
+
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.BufferedReader;
+import java.net.URLEncoder;
+import java.util.Iterator;
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
+import java.net.URL;
+import javax.net.ssl.HttpsURLConnection;
+import java.net.HttpURLConnection;
+
+import android.util.Log;
+
+import org.json.JSONObject;
+
 import com.android.group.synthesesapp.Fragment.AddClassFragment;
 import com.android.group.synthesesapp.Fragment.AddUserFragment;
 import com.android.group.synthesesapp.R;
@@ -27,6 +45,7 @@ public class TeacherMainActivity extends AppCompatActivity implements DialogInte
     private ListView classes_listView ;
     private ArrayList<String> classe_aList;
     private ArrayAdapter<String> listAdapter ;
+    private String[] classes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,8 +62,8 @@ public class TeacherMainActivity extends AppCompatActivity implements DialogInte
 
         //titre barre d'action
         setTitle("Classes de " + ((MyApplication) getApplicationContext()).nomProf + " " + ((MyApplication) getApplicationContext()).prenomProf);
-        //appel à la méthode generateListView pour créer la listview
-        generateListView();
+
+        new SendPostRequest().execute();
     }
 
     private void generateListView() {
@@ -54,9 +73,9 @@ public class TeacherMainActivity extends AppCompatActivity implements DialogInte
         //liste des articles
         classe_aList = new ArrayList<String>();
 
-        classe_aList.add("CP A");
-        classe_aList.add("CP B");
-        classe_aList.add("CM1 A");
+        for(int i=0;i<classes.length;i++){
+            classe_aList.add(classes[i]);
+        }
 
         //création de l'adapteur avec la liste
         listAdapter = new ArrayAdapter<String>(this, R.layout.simplerow_classe, classe_aList);
@@ -66,6 +85,102 @@ public class TeacherMainActivity extends AppCompatActivity implements DialogInte
 
         //ajouter un écouteur
         classes_listView.setOnItemClickListener(itemListener);
+    }
+
+    public class SendPostRequest extends AsyncTask<String, Void, String> {
+
+        protected void onPreExecute(){}
+
+        protected String doInBackground(String... arg0) {
+
+            try {
+
+                URL url = new URL("http://193.190.248.154/requeteClasses.php"); // here is your URL path
+
+                JSONObject postDataParams = new JSONObject();
+                postDataParams.put("Nom", ((MyApplication) getApplicationContext()).nomProf);
+                postDataParams.put("Prenom", ((MyApplication) getApplicationContext()).prenomProf);
+                Log.e("params",postDataParams.toString());
+
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setReadTimeout(15000 /* milliseconds */);
+                conn.setConnectTimeout(15000 /* milliseconds */);
+                conn.setRequestMethod("POST");
+                conn.setDoInput(true);
+                conn.setDoOutput(true);
+
+                OutputStream os = conn.getOutputStream();
+                BufferedWriter writer = new BufferedWriter(
+                        new OutputStreamWriter(os, "UTF-8"));
+                writer.write(getPostDataString(postDataParams));
+
+                writer.flush();
+                writer.close();
+                os.close();
+
+                int responseCode=conn.getResponseCode();
+
+                if (responseCode == HttpsURLConnection.HTTP_OK) {
+
+                    BufferedReader in=new BufferedReader(
+                            new InputStreamReader(
+                                    conn.getInputStream()));
+                    StringBuffer sb = new StringBuffer("");
+                    String line="";
+
+                    while((line = in.readLine()) != null) {
+
+                        sb.append(line);
+                        break;
+                    }
+
+                    in.close();
+                    return sb.toString();
+
+                }
+                else {
+                    return new String("false : "+responseCode);
+                }
+            }
+            catch(Exception e){
+                return new String("Exception: " + e.getMessage());
+            }
+
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            classes=result.split(";");
+            if(classes[0]!="") { //si il y a au moins une classe
+                //appel à la méthode generateListView pour créer la listview
+                generateListView();
+            }
+        }
+    }
+
+    public String getPostDataString(JSONObject params) throws Exception {
+
+        StringBuilder result = new StringBuilder();
+        boolean first = true;
+
+        Iterator<String> itr = params.keys();
+
+        while(itr.hasNext()){
+
+            String key= itr.next();
+            Object value = params.get(key);
+
+            if (first)
+                first = false;
+            else
+                result.append("&");
+
+            result.append(URLEncoder.encode(key, "UTF-8"));
+            result.append("=");
+            result.append(URLEncoder.encode(value.toString(), "UTF-8"));
+
+        }
+        return result.toString();
     }
 
     //listener quand un item de la listview est cliqué
@@ -84,7 +199,7 @@ public class TeacherMainActivity extends AppCompatActivity implements DialogInte
     @Override
     public void onDismiss(final DialogInterface dialog) {
         //refresh la listview après avoir cliquer sur OK ou Effacer du DialogFragment
-        generateListView();
+        new SendPostRequest().execute();
     }
 
     //affiche le menu dans l'action bar

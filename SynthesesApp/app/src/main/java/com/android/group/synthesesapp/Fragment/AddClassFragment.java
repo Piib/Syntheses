@@ -161,7 +161,7 @@ public class AddClassFragment extends DialogFragment{
                         .create();
                 ad.setCancelable(false);
                 ad.setTitle("Classe non existante");
-                ad.setMessage("La classe n'existe pas. Pour créer une classe créez un elève dans cette classe et ensuite ajoutez la");
+                ad.setMessage("La classe n'existe pas. Pour créer une classe créez un elève dans cette classe et ensuite ajoutez la.");
                 ad.setButton("OK", new DialogInterface.OnClickListener() {
 
                     public void onClick(DialogInterface dialog, int which) {
