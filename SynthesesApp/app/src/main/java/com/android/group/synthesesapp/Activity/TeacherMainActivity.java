@@ -1,5 +1,6 @@
 package com.android.group.synthesesapp.Activity;
 
+import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -46,6 +47,9 @@ public class TeacherMainActivity extends AppCompatActivity implements DialogInte
     private ArrayList<String> classe_aList;
     private ArrayAdapter<String> listAdapter ;
     private String[] classes;
+    private String nomClasse,typeRequete;
+
+    private URL url;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +67,7 @@ public class TeacherMainActivity extends AppCompatActivity implements DialogInte
         //titre barre d'action
         setTitle("Classes de " + ((MyApplication) getApplicationContext()).nomProf + " " + ((MyApplication) getApplicationContext()).prenomProf);
 
+        typeRequete="Load";
         new SendPostRequest().execute();
     }
 
@@ -85,6 +90,8 @@ public class TeacherMainActivity extends AppCompatActivity implements DialogInte
 
         //ajouter un écouteur
         classes_listView.setOnItemClickListener(itemListener);
+
+        classes_listView.setOnItemLongClickListener(itemLongClickListenner);
     }
 
     public class SendPostRequest extends AsyncTask<String, Void, String> {
@@ -94,12 +101,15 @@ public class TeacherMainActivity extends AppCompatActivity implements DialogInte
         protected String doInBackground(String... arg0) {
 
             try {
-
-                URL url = new URL("http://193.190.248.154/requeteClasses.php"); // here is your URL path
-
                 JSONObject postDataParams = new JSONObject();
-                postDataParams.put("Nom", ((MyApplication) getApplicationContext()).nomProf);
-                postDataParams.put("Prenom", ((MyApplication) getApplicationContext()).prenomProf);
+                if(typeRequete.matches("Load")){
+                    url = new URL("http://193.190.248.154/requeteClasses.php"); // here is your URL path
+                    postDataParams.put("Nom", ((MyApplication) getApplicationContext()).nomProf);
+                    postDataParams.put("Prenom", ((MyApplication) getApplicationContext()).prenomProf);
+                }else{
+                    url = new URL("http://193.190.248.154/deleteClasse.php"); // here is your URL path
+                    postDataParams.put("Classe", nomClasse);
+                }
                 Log.e("params",postDataParams.toString());
 
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -150,10 +160,15 @@ public class TeacherMainActivity extends AppCompatActivity implements DialogInte
 
         @Override
         protected void onPostExecute(String result) {
-            classes=result.split(";");
-            if(classes[0]!="") { //si il y a au moins une classe
-                //appel à la méthode generateListView pour créer la listview
-                generateListView();
+            if(typeRequete.matches("Load")){
+                classes=result.split(";");
+                if(classes[0]!="") { //si il y a au moins une classe
+                    //appel à la méthode generateListView pour créer la listview
+                    generateListView();
+                }
+            }else{
+                typeRequete="Load";
+                new SendPostRequest().execute();
             }
         }
     }
@@ -232,4 +247,32 @@ public class TeacherMainActivity extends AppCompatActivity implements DialogInte
         }
         return super.onOptionsItemSelected(item);
     }
+
+    private AdapterView.OnItemLongClickListener itemLongClickListenner=new AdapterView.OnItemLongClickListener(){
+        @Override
+        public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
+                                       int pos, long id) {
+            nomClasse= (String) classes_listView.getItemAtPosition(pos);
+
+
+            //source: https://stackoverflow.com/questions/8227820/alert-dialog-two-buttons
+            AlertDialog.Builder builder = new AlertDialog.Builder(TeacherMainActivity.this);
+            builder.setMessage("Etes-vous sûr de supprimer cette classe et tous ses élèves?")
+                    .setCancelable(false)
+                    .setPositiveButton("Oui", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            typeRequete="Delete";
+                            new SendPostRequest().execute();
+                        }
+                    })
+                    .setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.cancel();
+                        }
+                    });
+            AlertDialog alert = builder.create();
+            alert.show();
+            return true;
+        }
+    };
 }

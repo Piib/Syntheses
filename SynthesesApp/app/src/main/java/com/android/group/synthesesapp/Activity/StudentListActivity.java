@@ -1,5 +1,7 @@
 package com.android.group.synthesesapp.Activity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -37,7 +39,9 @@ public class StudentListActivity extends AppCompatActivity {
     private ArrayList<String> eleve_aList;
     private ArrayAdapter<String> listAdapter ;
     private String[] listeEleves, manipulationNom;
-    private String nomEleve;
+    private String nomCompletEleve,prenomEleve,nomEleve,typeRequete;
+
+    private URL url;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +51,7 @@ public class StudentListActivity extends AppCompatActivity {
         //titre barre d'action
         setTitle("Elèves de " + ((MyApplication) getApplicationContext()).classe);
 
+        typeRequete="Load";
         new SendPostRequest().execute();
     }
 
@@ -59,8 +64,8 @@ public class StudentListActivity extends AppCompatActivity {
 
         for(int i = 0; i< listeEleves.length; i++){
             manipulationNom = listeEleves[i].split(":");
-            nomEleve=manipulationNom[0]+" "+manipulationNom[1];
-            eleve_aList.add(nomEleve);
+            nomCompletEleve =manipulationNom[0]+" "+manipulationNom[1];
+            eleve_aList.add(nomCompletEleve);
         }
 
         //création de l'adapteur avec la liste
@@ -71,6 +76,8 @@ public class StudentListActivity extends AppCompatActivity {
 
         //ajouter un écouteur
         eleves_listView.setOnItemClickListener(itemListener);
+
+        eleves_listView.setOnItemLongClickListener(itemLongClickListenner);
     }
 
     public class SendPostRequest extends AsyncTask<String, Void, String> {
@@ -80,11 +87,15 @@ public class StudentListActivity extends AppCompatActivity {
         protected String doInBackground(String... arg0) {
 
             try {
-
-                URL url = new URL("http://193.190.248.154/requeteEleves.php"); // here is your URL path
-
                 JSONObject postDataParams = new JSONObject();
-                postDataParams.put("Classe", ((MyApplication) getApplicationContext()).classe);
+                if(typeRequete.matches("Load")){
+                    url = new URL("http://193.190.248.154/requeteEleves.php"); // here is your URL path
+                    postDataParams.put("Classe", ((MyApplication) getApplicationContext()).classe);
+                }else{
+                    url = new URL("http://193.190.248.154/deleteEleve.php"); // here is your URL path
+                    postDataParams.put("Nom", nomEleve);
+                    postDataParams.put("Prenom", prenomEleve);
+                }
                 Log.e("params",postDataParams.toString());
 
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -135,10 +146,15 @@ public class StudentListActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String result) {
-            listeEleves =result.split(";");
-            if(listeEleves[0]!="") { //si il y a au moins une classe
-                //appel à la méthode generateListView pour créer la listview
-                generateListView();
+            if(typeRequete.matches("Load")){
+                listeEleves =result.split(";");
+                if(listeEleves[0]!="") { //si il y a au moins une classe
+                    //appel à la méthode generateListView pour créer la listview
+                    generateListView();
+                }
+            }else{
+                typeRequete="Load";
+                new SendPostRequest().execute();
             }
         }
     }
@@ -176,11 +192,41 @@ public class StudentListActivity extends AppCompatActivity {
             String item= (String) eleves_listView.getItemAtPosition(position);
             Intent intent = new Intent(getApplicationContext(), SyntheseEleve.class);
             int espace=item.indexOf(" ");
-            String nomEleve=item.substring(0,espace);
-            String prenomEleve=item.substring(espace+1);
+            nomEleve=item.substring(0,espace);
+            prenomEleve=item.substring(espace+1);
             ((MyApplication) getApplicationContext()).nomEleve=nomEleve;
             ((MyApplication) getApplicationContext()).prenomEleve=prenomEleve;
             startActivity(intent);
+        }
+    };
+
+    private AdapterView.OnItemLongClickListener itemLongClickListenner=new AdapterView.OnItemLongClickListener(){
+        @Override
+        public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
+                                       int pos, long id) {
+            String item= (String) eleves_listView.getItemAtPosition(pos);
+            int espace=item.indexOf(" ");
+            nomEleve=item.substring(0,espace);
+            prenomEleve=item.substring(espace+1);
+
+            //source: https://stackoverflow.com/questions/8227820/alert-dialog-two-buttons
+            AlertDialog.Builder builder = new AlertDialog.Builder(StudentListActivity.this);
+            builder.setMessage("Etes-vous sûr de supprimer cet élève?")
+                    .setCancelable(false)
+                    .setPositiveButton("Oui", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            typeRequete="Delete";
+                            new SendPostRequest().execute();
+                        }
+                    })
+                    .setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.cancel();
+                        }
+                    });
+            AlertDialog alert = builder.create();
+            alert.show();
+            return true;
         }
     };
 }
