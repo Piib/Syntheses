@@ -24,7 +24,7 @@ public class SyntheseEleve extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_synthseeleve);
 
-        setTitle("Synthèse de " + ((MyApplication) getApplicationContext()).nomEleve + " "+((MyApplication) getApplicationContext()).prenomEleve);
+        setTitle("Synthèse de " + ((MyApplication) getApplicationContext()).nomEleve + " " +((MyApplication) getApplicationContext()).prenomEleve);
     }
 
     //affiche le menu dans l'action bar
