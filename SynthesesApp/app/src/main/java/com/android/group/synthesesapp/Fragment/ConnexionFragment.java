@@ -46,7 +46,6 @@ public class ConnexionFragment extends DialogFragment {
         champPrenom= (EditText) rootView.findViewById(R.id.prenom);
         champMdp= (EditText) rootView.findViewById(R.id.mdp);
 
-        //bouton connexion et listener
         Button connect = (Button) rootView.findViewById(R.id.connect);
         connect.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,12 +56,12 @@ public class ConnexionFragment extends DialogFragment {
                 if(nom.matches("") || prenom.matches("") || mdp.matches("")){
                     Toast.makeText(getActivity(), "Un des champs est vide", Toast.LENGTH_SHORT).show();
                 }else{
+                    //requete serveur pour vérifier l'identité
                     new SendPostRequest().execute();
                 }
             }
         });
 
-        //bouton annuler et listener (dismiss si cliqué)
         Button annuler = (Button) rootView.findViewById(R.id.annuler);
         annuler.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,6 +73,8 @@ public class ConnexionFragment extends DialogFragment {
         return rootView;
     }
 
+    //source SendPostRequest, onPostExecute, GetPostDataString: https://www.studytutorial.in/android-httpurlconnection-post-and-get-request-tutorial
+
     public class SendPostRequest extends AsyncTask<String, Void, String> {
 
         protected void onPreExecute(){}
@@ -82,7 +83,7 @@ public class ConnexionFragment extends DialogFragment {
 
             try {
 
-                URL url = new URL("http://193.190.248.154/connexion.php"); // here is your URL path
+                URL url = new URL("http://193.190.248.154/connexion.php");
 
                 JSONObject postDataParams = new JSONObject();
                 postDataParams.put("Nom", nom);
@@ -137,6 +138,7 @@ public class ConnexionFragment extends DialogFragment {
 
         }
 
+        //réaction au code renvoyé par le serveur suite à la requête
         @Override
         protected void onPostExecute(String result) {
             if(result.matches("UserX")){
@@ -150,6 +152,7 @@ public class ConnexionFragment extends DialogFragment {
                 startActivity(intent);
             }
 
+            //réponses du serveur si les entrées ne sont pas dans un bon format
             if(!result.matches("UserX")&& !result.matches("UserV")){
                 Toast.makeText(getActivity(), result, Toast.LENGTH_SHORT).show();
             }

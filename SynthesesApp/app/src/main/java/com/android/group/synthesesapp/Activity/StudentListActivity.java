@@ -13,7 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.android.group.synthesesapp.R;
-import com.android.group.synthesesapp.Tool.MyApplication;
+import com.android.group.synthesesapp.Tool.Share;
 
 import org.json.JSONObject;
 
@@ -39,42 +39,36 @@ public class StudentListActivity extends AppCompatActivity {
     private ArrayList<String> eleve_aList;
     private ArrayAdapter<String> listAdapter ;
     private String[] listeEleves, manipulationNom;
-    private String nomCompletEleve,prenomEleve,nomEleve,typeRequete;
-
-    private URL url;
+    private String nomCompletEleve,prenomEleve,nomEleve,typeRequete; //typeRequete différencie le chargement de la suppresion pour la requête serveur
+    private URL url; //URL pour les requêtes Load ou Delete
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_studentlistactivity);
 
-        //titre barre d'action
-        setTitle("Elèves de " + ((MyApplication) getApplicationContext()).classe);
+        setTitle("Elèves de " + ((Share) getApplicationContext()).classe);
 
         typeRequete="Load";
         new SendPostRequest().execute();
     }
 
     private void generateListView() {
-        //récupération du widget
         eleves_listView = (ListView) findViewById( R.id.eleves_listView );
 
-        //liste des articles
         eleve_aList = new ArrayList<String>();
 
+        //découpe encore une fois le resultat de la requête pour obtenir le nom et prénom de l'élève
         for(int i = 0; i< listeEleves.length; i++){
             manipulationNom = listeEleves[i].split(":");
             nomCompletEleve =manipulationNom[0]+" "+manipulationNom[1];
             eleve_aList.add(nomCompletEleve);
         }
 
-        //création de l'adapteur avec la liste
         listAdapter = new ArrayAdapter<String>(this, R.layout.simplerow_eleve, eleve_aList);
 
-        //assigner l'adapteur à la listview
         eleves_listView.setAdapter( listAdapter );
 
-        //ajouter un écouteur
         eleves_listView.setOnItemClickListener(itemListener);
 
         eleves_listView.setOnItemLongClickListener(itemLongClickListenner);
@@ -87,12 +81,14 @@ public class StudentListActivity extends AppCompatActivity {
         protected String doInBackground(String... arg0) {
 
             try {
+
+                //si Load alors URL et paramètres différents que Delete
                 JSONObject postDataParams = new JSONObject();
                 if(typeRequete.matches("Load")){
-                    url = new URL("http://193.190.248.154/requeteEleves.php"); // here is your URL path
-                    postDataParams.put("Classe", ((MyApplication) getApplicationContext()).classe);
+                    url = new URL("http://193.190.248.154/requeteEleves.php");
+                    postDataParams.put("Classe", ((Share) getApplicationContext()).classe);
                 }else{
-                    url = new URL("http://193.190.248.154/deleteEleve.php"); // here is your URL path
+                    url = new URL("http://193.190.248.154/deleteEleve.php");
                     postDataParams.put("Nom", nomEleve);
                     postDataParams.put("Prenom", prenomEleve);
                 }
@@ -144,11 +140,13 @@ public class StudentListActivity extends AppCompatActivity {
 
         }
 
+        //réaction au code renvoyé par le serveur suite à la requête
         @Override
         protected void onPostExecute(String result) {
             if(typeRequete.matches("Load")){
+                //découpe le resultats en fonction des séparteurs ;
                 listeEleves =result.split(";");
-                if(listeEleves[0]!="") { //si il y a au moins une classe
+                if(listeEleves[0]!="") { //si il y a au moins un eleve
                     //appel à la méthode generateListView pour créer la listview
                     generateListView();
                 }
@@ -184,18 +182,19 @@ public class StudentListActivity extends AppCompatActivity {
         return result.toString();
     }
 
-    //listener quand un item de la listview est cliqué
     private AdapterView.OnItemClickListener itemListener = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position,
                                 long id) {
+            //découpe l'item avec l'espace comme séparateur pour déterminer le nom et prénom de l'élève
             String item= (String) eleves_listView.getItemAtPosition(position);
-            Intent intent = new Intent(getApplicationContext(), SyntheseEleve.class);
             int espace=item.indexOf(" ");
             nomEleve=item.substring(0,espace);
             prenomEleve=item.substring(espace+1);
-            ((MyApplication) getApplicationContext()).nomEleve=nomEleve;
-            ((MyApplication) getApplicationContext()).prenomEleve=prenomEleve;
+            ((Share) getApplicationContext()).nomEleve=nomEleve;
+            ((Share) getApplicationContext()).prenomEleve=prenomEleve;
+
+            Intent intent = new Intent(getApplicationContext(), SyntheseEleve.class);
             startActivity(intent);
         }
     };
@@ -204,6 +203,7 @@ public class StudentListActivity extends AppCompatActivity {
         @Override
         public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
                                        int pos, long id) {
+            //découpe l'item avec l'espace comme séparateur pour déterminer le nom et prénom de l'élève
             String item= (String) eleves_listView.getItemAtPosition(pos);
             int espace=item.indexOf(" ");
             nomEleve=item.substring(0,espace);

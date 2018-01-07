@@ -2,7 +2,6 @@ package com.android.group.synthesesapp.Activity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.DataSetObserver;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -15,12 +14,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.GridView;
-import android.widget.ListAdapter;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.group.synthesesapp.Adapater.PasswordAdapter;
@@ -31,7 +26,6 @@ import com.android.group.synthesesapp.Tool.BackgroundTask;
 import com.android.group.synthesesapp.R;
 
 import java.util.ArrayList;
-
 
 public class ConnexionActivity extends AppCompatActivity {
 
@@ -66,9 +60,6 @@ public class ConnexionActivity extends AppCompatActivity {
         users.add(new User("Borelli", "Geoffrey", 0, "0", "eleve"));
         users.add(new User("Amaterasu", "Landry", 1, "1", "eleve"));
         users.add(new User("Nicolas", "Pablo", 2, "2", "eleve"));
-
-
-
 
         userAdapter = new UserAdapter(getApplicationContext(), users);
 
@@ -117,8 +108,6 @@ public class ConnexionActivity extends AppCompatActivity {
                             Toast.makeText(ConnexionActivity.this, "Connexion réussie", Toast.LENGTH_LONG).show();
                             Intent intent = new Intent(ConnexionActivity.this, Phase_1_Activity.class);
                             startActivity(intent);
-
-
                         }
                         else {
                             Toast.makeText(ConnexionActivity.this, "Connexion echouée", Toast.LENGTH_LONG).show();
@@ -134,13 +123,6 @@ public class ConnexionActivity extends AppCompatActivity {
                 builder.show();
             }
         });
-
-
-
-
-
-
-
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -171,9 +153,10 @@ public class ConnexionActivity extends AppCompatActivity {
     //listener de l'action connexion du menu
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        //afficher le fragment pour la connexion du professeur
         FragmentManager fm = getSupportFragmentManager();
         ConnexionFragment dialogFragment = new ConnexionFragment ();
-        dialogFragment.show(fm, "frgament_connexion");
+        dialogFragment.show(fm, "fragment_connexion");
         return true;
     }
 

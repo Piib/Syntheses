@@ -49,13 +49,14 @@ public class AddUserFragment extends DialogFragment {
     Spinner spinner;
     EditText champNom, champPrenom,champClasse, champMdp;
     String nom,prenom,classe,mdp;
-    int status=0;
+    int status=0; //par défaut ajout d'un élève
+
     Button GetImageFromGalleryButton;
     ImageView ShowSelectedImage;
     Bitmap FixBitmap;
     ByteArrayOutputStream byteArrayOutputStream;
     String ImageName = "image_data" ;
-    String ServerUploadPath ="http://193.190.248.154/ajoutImage.php" ;
+    String ServerUploadPath ="http://193.190.248.154/ajoutImage.php" ; //URL pour l'ajout de la photo de profil de l'élève
     byte[] byteArray ;
     String ConvertImage ;
     HttpURLConnection httpURLConnection ;
@@ -91,9 +92,11 @@ public class AddUserFragment extends DialogFragment {
 
         ShowSelectedImage = (ImageView) rootView.findViewById(R.id.imageView);
 
+        //comme l'ajout d'un elève est par défaut, le champ du mot de passe est caché
         champMdp.setVisibility(View.GONE);
         champMdp.setVisibility(View.INVISIBLE);
 
+        //affiche ou cache les champs en fonction de la position du spinner (élève ou professeur)
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
@@ -121,6 +124,8 @@ public class AddUserFragment extends DialogFragment {
 
         });
 
+        //source pour l'ajout et envoi de l'image: https://www.android-examples.com/android-select-image-from-gallery-upload-to-server-example/
+
         byteArrayOutputStream = new ByteArrayOutputStream();
 
         GetImageFromGalleryButton.setOnClickListener(new View.OnClickListener() {
@@ -133,12 +138,11 @@ public class AddUserFragment extends DialogFragment {
 
                 intent.setAction(Intent.ACTION_GET_CONTENT);
 
-                startActivityForResult(Intent.createChooser(intent, "Select Image From Gallery"), 1);
+                startActivityForResult(Intent.createChooser(intent, "Sélectionner l'image depuis la galerie"), 1);
 
             }
         });
 
-        //bouton connexion et listener
         Button ajout = (Button) rootView.findViewById(R.id.ajouter);
         ajout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -155,6 +159,7 @@ public class AddUserFragment extends DialogFragment {
                         if(ShowSelectedImage.getDrawable()==null){
                             Toast.makeText(getActivity(), "Ajoutez la photo de profil", Toast.LENGTH_SHORT).show();
                         }else{
+                            //d'abord la requête serveur pour l'ajout dans la DB
                             new SendPostRequest().execute();
                         }
                     }
@@ -165,11 +170,9 @@ public class AddUserFragment extends DialogFragment {
                         new SendPostRequest().execute();
                     }
                 }
-                //dismiss();
             }
         });
 
-        //bouton annuler et listener (dismiss si cliqué)
         Button annuler = (Button) rootView.findViewById(R.id.annuler);
         annuler.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -222,8 +225,8 @@ public class AddUserFragment extends DialogFragment {
 
                 HashMapParams.put(ImageName, ConvertImage);
 
+                //passe le nom et prénom de l'élève pour le nom du fichier sur le serveur
                 HashMapParams.put("nom",nom);
-
                 HashMapParams.put("prenom",prenom);
 
                 String FinalData = imageProcessClass.ImageHttpRequest(ServerUploadPath, HashMapParams);
@@ -313,6 +316,8 @@ public class AddUserFragment extends DialogFragment {
         }
     }
 
+    //source SendPostRequest, onPostExecute, GetPostDataString: https://www.studytutorial.in/android-httpurlconnection-post-and-get-request-tutorial
+
     public class SendPostRequest extends AsyncTask<String, Void, String> {
 
         protected void onPreExecute(){}
@@ -321,8 +326,11 @@ public class AddUserFragment extends DialogFragment {
 
             try {
                 JSONObject postDataParams = new JSONObject();
+
+                //URL par défaut car ajout d'élève par défaut
                 URL url= new URL("http://193.190.248.154/ajoutEleve.php");
 
+                //URL et paramètres différents en fonciton de la position du spinner (élève/professeur)
                 if(status==0){ //eleve
                     postDataParams.put("Nom", nom);
                     postDataParams.put("Prenom", prenom);
@@ -382,12 +390,14 @@ public class AddUserFragment extends DialogFragment {
 
         }
 
+        //réaction au code renvoyé par le serveur suite à la requête
         @Override
         protected void onPostExecute(String result) {
             if(result.matches("UserX")){
                 Toast.makeText(getActivity(), "L'utilisateur existe déjà", Toast.LENGTH_SHORT).show();
             }
 
+            //si la requête a été effectuée alors seulement l'image est envoyée au serveur (uniquement pour le formulaire de l'ajout d'élève)
             if(result.matches("LinkV")){
                 Toast.makeText(getActivity(), "Utilisateur ajouté avec succès", Toast.LENGTH_SHORT).show();
                 if(status==0){
@@ -396,6 +406,7 @@ public class AddUserFragment extends DialogFragment {
                 dismiss();
             }
 
+            //réponses du serveur si les entrées ne sont pas dans un bon format
             if(!result.matches("UserX")&& !result.matches("LinkV")){
                 Toast.makeText(getActivity(), result, Toast.LENGTH_SHORT).show();
             }
