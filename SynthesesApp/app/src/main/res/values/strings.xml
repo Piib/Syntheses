@@ -19,4 +19,5 @@
         <item>Elève</item>
         <item>Professeur</item>
     </string-array>
+    <string name="title_activity_phase_2_">Phase_2_Activity</string>
 </resources>

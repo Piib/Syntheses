@@ -25,10 +25,12 @@ public class BackgroundTask extends AsyncTask<String, Void, String> {
     }
 
     protected String doInBackground(String... arg0) {
+        JSONArray jsonObj = new JSONArray();
 
         try {
 
             URL url = new URL(arg0[0]);
+            Log.d("url", arg0[0]);
 
             HttpURLConnection httpURLConnection;
             httpURLConnection = (HttpURLConnection) url.openConnection();
@@ -39,13 +41,8 @@ public class BackgroundTask extends AsyncTask<String, Void, String> {
                 builder.append(output);
                 builder.append("\n");
             }
-            JSONObject jsonObj = new JSONObject(builder.toString());
+            jsonObj = new JSONArray(builder.toString());
             Log.e("json", jsonObj.toString());
-            Log.e("jsonTemp", jsonObj.getString("temp"));
-            JSONArray jsonObj2 = new JSONArray(jsonObj.getString("temp"));
-            Log.e("jsonTab(0)", jsonObj2.get(0).toString());
-            JSONObject jsonObj3 = new JSONObject(jsonObj2.get(0).toString());
-            Log.e("jsonError", jsonObj3.getString("error"));
 
 
         } catch (MalformedURLException e) {
@@ -55,6 +52,6 @@ public class BackgroundTask extends AsyncTask<String, Void, String> {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return "ok";
+        return jsonObj.toString();
     }
 }

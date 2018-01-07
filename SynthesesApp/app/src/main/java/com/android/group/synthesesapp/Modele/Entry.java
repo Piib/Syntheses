@@ -8,11 +8,13 @@ public class Entry {
     private int iId;
     private String sType;
     private String sContenu;
+    private int iOrder;
 
-    public Entry(int iId, String sType, String sContenu) {
+    public Entry(int iId, String sType, String sContenu, int iOrder) {
         this.iId = iId;
         this.sType = sType;
         this.sContenu = sContenu;
+        this.iOrder = iOrder;
     }
 
     public int getiId() {
@@ -37,6 +39,14 @@ public class Entry {
 
     public void setsContenu(String sContenu) {
         this.sContenu = sContenu;
+    }
+
+    public int getiOrder() {
+        return iOrder;
+    }
+
+    public void setiOrder(int iOrder) {
+        this.iOrder = iOrder;
     }
 
     @Override

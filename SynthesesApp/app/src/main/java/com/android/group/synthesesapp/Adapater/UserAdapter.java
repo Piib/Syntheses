@@ -38,8 +38,6 @@ public class UserAdapter extends ArrayAdapter<User> {
         uNom.setText(u.getsNom());
         final TextView uPrenom = convertView.findViewById(R.id.prenomUser);
         uPrenom.setText(u.getsPrenom());
-        final ImageView uPhoto = convertView.findViewById(R.id.photoUser);
-        uPhoto.setImageResource(R.drawable.icone_succes);
 
 
         return convertView;

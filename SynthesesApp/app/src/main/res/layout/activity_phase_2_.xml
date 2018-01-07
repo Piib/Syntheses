@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.android.group.synthesesapp.Activity.Phase_1_Activity">
+    tools:context="com.android.group.synthesesapp.Activity.Phase_2_Activity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -18,10 +18,9 @@
             android:background="?attr/colorPrimary"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
-
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_phase_1_" />
+    <include layout="@layout/content_phase_2_" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"

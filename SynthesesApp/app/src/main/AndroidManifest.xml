@@ -11,23 +11,21 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.STORAGE" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
-
-
-    <uses-feature android:name="android.hardware.camera"
+    <uses-feature
+        android:name="android.hardware.camera"
         android:required="true" />
 
     <application
+        android:name=".Tool.MyApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
-        android:name=".Tool.MyApplication">
-
+        android:theme="@style/AppTheme">
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="com.example.android.fileprovider"
@@ -35,8 +33,9 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths"></meta-data>
+                android:resource="@xml/file_paths" />
         </provider>
+
         <activity
             android:name=".Activity.ConnexionActivity"
             android:label="@string/title_activity_connexion"
@@ -50,29 +49,35 @@
         <activity
             android:name=".Activity.Phase_1_Activity"
             android:label="@string/title_activity_phase_1_"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
-        <activity android:name=".Activity.TeacherMainActivity"
-            android:screenOrientation="portrait"
-            android:parentActivityName=".Activity.ConnexionActivity" >
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".Activity.TeacherMainActivity"
+            android:parentActivityName=".Activity.ConnexionActivity"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".Activity.ConnexionActivity" />
         </activity>
-        <activity android:name=".Activity.StudentListActivity"
-            android:screenOrientation="portrait"
-            android:parentActivityName=".Activity.TeacherMainActivity" >
+        <activity
+            android:name=".Activity.StudentListActivity"
+            android:parentActivityName=".Activity.TeacherMainActivity"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".Activity.TeacherMainActivity" />
         </activity>
-        <activity android:name=".Activity.SyntheseEleve"
-            android:screenOrientation="portrait"
-            android:parentActivityName=".Activity.StudentListActivity" >
+        <activity
+            android:name=".Activity.SyntheseEleve"
+            android:parentActivityName=".Activity.StudentListActivity"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".Activity.StudentListActivity" />
         </activity>
+        <activity
+            android:name=".Activity.Phase_2_Activity"
+            android:label="@string/title_activity_phase_2_"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
