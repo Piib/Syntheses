@@ -53,7 +53,6 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.function.ToDoubleBiFunction;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -172,12 +171,8 @@ public class Phase_1_Activity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         user = getIntent().getParcelableExtra("user");
 
-
-
         //Initialisation listeEnoncé
         enconceList = new ArrayList<>();
-
-
 
         enconceList.add(new Entry(0, "typeEnonce0", "conetenu", 0));
         enconceList.add(new Entry(1, "typeEnonce1", "conetenu", 1));
@@ -187,7 +182,6 @@ public class Phase_1_Activity extends AppCompatActivity {
         ListView listEnonce = (ListView) findViewById(R.id.listEnonce);
         EnonceAdapter enonceAdapter = new EnonceAdapter(getBaseContext(), 0, enconceList);
         listEnonce.setAdapter(enonceAdapter);
-
 
         //Initialisation listReformulé
         reformuleList = appelServeur("http://193.190.248.154/getNote.php?userId="+user.getiIdu()+"&&phase=1");
@@ -246,8 +240,6 @@ public class Phase_1_Activity extends AppCompatActivity {
         choixAjout[0]="Text";
         choixAjout[1]="Son";
         choixAjout[2]="Image";
-
-
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -367,8 +359,6 @@ public class Phase_1_Activity extends AppCompatActivity {
         d.setView(content);
         d.show();
 
-
-
         //////////////////////////////////////////////////////////////////
         return newSong;
     }
@@ -418,10 +408,6 @@ public class Phase_1_Activity extends AppCompatActivity {
         Log.e("photofile", mCurrentPhotoPath);
         return image;
     }
-
-
-
-
 
     private String getFilePath() {
 
@@ -485,5 +471,6 @@ public class Phase_1_Activity extends AppCompatActivity {
         }
         return entries;
     }
+
 
 }

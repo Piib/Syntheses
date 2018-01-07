@@ -1,11 +1,8 @@
 package com.android.group.synthesesapp.Activity;
-
-import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.net.Uri;
@@ -13,7 +10,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.FragmentManager;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -32,12 +29,12 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.android.group.synthesesapp.Adapater.EnonceAdapter;
 import com.android.group.synthesesapp.Adapater.ReformuleAdapter;
-import com.android.group.synthesesapp.Fragment.ConnexionFragment;
 import com.android.group.synthesesapp.Modele.Entry;
 import com.android.group.synthesesapp.Modele.User;
 import com.android.group.synthesesapp.R;
+import com.android.group.synthesesapp.Tool.BackgroundTask;
+import com.android.group.synthesesapp.Tool.Share;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -48,9 +45,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.MediaType;
@@ -58,17 +55,13 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-import com.android.group.synthesesapp.R;
-import com.android.group.synthesesapp.Tool.BackgroundTask;
-import com.android.group.synthesesapp.Tool.Share;
 
 /**
- * Created by Piib on 02-01-18.
+ * Created by Piib on 07-01-18.
  */
 
-public class SyntheseEleve extends AppCompatActivity {
+public class SyntheseEleve3 extends AppCompatActivity{
     private String mCurrentPhotoPath;
-    private ArrayList<Entry> enconceList;
     private ArrayList<Entry> reformuleList;
     private ArrayList<Entry> ajoutListe;
 
@@ -85,7 +78,7 @@ public class SyntheseEleve extends AppCompatActivity {
         JSONObject listEnvoie = new JSONObject();
         try {
             listEnvoie.put("userId", ((Share) getApplicationContext()).idEleve );
-            listEnvoie.put("phase", 1);
+            listEnvoie.put("phase", 3);
             JSONArray arrayEntries = new JSONArray();
             for(Entry entry : ajoutListe){
                 JSONObject jEntry = new JSONObject();
@@ -119,8 +112,6 @@ public class SyntheseEleve extends AppCompatActivity {
             listEnvoie.put("entries", arrayEntries);
             Log.e("resultat", listEnvoie.toString());
             requetePost(listEnvoie, "http://193.190.248.154/ajoutNote.php");
-            Intent intent = new Intent(SyntheseEleve.this, SyntheseEleve2.class);
-            startActivity(intent);
         }
         catch (Exception e){
             e.printStackTrace();
@@ -171,17 +162,12 @@ public class SyntheseEleve extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+
+
         //Initialisation listeEnoncé
-        enconceList = new ArrayList<>();
-
-
-
-        ListView listEnonce = (ListView) findViewById(R.id.listEnonce);
-        EnonceAdapter enonceAdapter = new EnonceAdapter(getBaseContext(), 0, enconceList);
-        listEnonce.setAdapter(enonceAdapter);
 
         //Initialisation listReformulé
-        reformuleList = appelServeur("http://193.190.248.154/getNote.php?userId="+((Share) getApplicationContext()).idEleve+"&&phase=1");
+        reformuleList = appelServeur("http://193.190.248.154/getNote.php?userId="+((Share) getApplicationContext()).idEleve +"&&phase=3");
         ajoutListe=new ArrayList<>();
 
         final ListView listReformule = (ListView) findViewById(R.id.listReformule);
@@ -190,13 +176,13 @@ public class SyntheseEleve extends AppCompatActivity {
         listReformule.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(SyntheseEleve.this);
+                AlertDialog.Builder builder = new AlertDialog.Builder(SyntheseEleve3.this);
 
-                ImageView imv = new ImageView(SyntheseEleve.this);
+                ImageView imv = new ImageView(SyntheseEleve3.this);
                 imv.setImageDrawable(getDrawable(R.drawable.icone_delete));
                 imv.setMinimumWidth(500);
                 imv.setMinimumHeight(500);
-                RelativeLayout rl = new RelativeLayout(SyntheseEleve.this);
+                RelativeLayout rl = new RelativeLayout(SyntheseEleve3.this);
                 rl.addView(imv);
 
                 builder
@@ -238,12 +224,14 @@ public class SyntheseEleve extends AppCompatActivity {
         choixAjout[1]="Son";
         choixAjout[2]="Image";
 
+
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 final int[] choix = {-1};
-                AlertDialog.Builder builder = new AlertDialog.Builder(SyntheseEleve.this);
+                AlertDialog.Builder builder = new AlertDialog.Builder(SyntheseEleve3.this);
                 builder.setTitle("Ajouter +");
 //                builder.setMessage("ok");
                 builder.setSingleChoiceItems(choixAjout, -1, new DialogInterface.OnClickListener() {
@@ -283,10 +271,10 @@ public class SyntheseEleve extends AppCompatActivity {
 
     private Entry newText(final ReformuleAdapter reformuleAdapter) {
         final Entry newText = new Entry(0, "text", null, reformuleList.size());
-        AlertDialog.Builder builder= new AlertDialog.Builder(SyntheseEleve.this);
+        AlertDialog.Builder builder= new AlertDialog.Builder(SyntheseEleve3.this);
         builder.setTitle("TEXTE");
-        RelativeLayout content = new RelativeLayout(SyntheseEleve.this);
-        final EditText textView = new EditText(SyntheseEleve.this);
+        RelativeLayout content = new RelativeLayout(SyntheseEleve3.this);
+        final EditText textView = new EditText(SyntheseEleve3.this);
         content.addView(textView);
         textView.setMinWidth(content.getMeasuredWidth());
         builder.setView(content);
@@ -317,12 +305,12 @@ public class SyntheseEleve extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        final AlertDialog.Builder builder = new AlertDialog.Builder(SyntheseEleve.this);
+        final AlertDialog.Builder builder = new AlertDialog.Builder(SyntheseEleve3.this);
         final AlertDialog d = builder.create();
         d.setTitle("SON");
-        final LinearLayout content = new LinearLayout(SyntheseEleve.this);
-        final Button bStart = new Button(SyntheseEleve.this);
-        final Button bStop = new Button(SyntheseEleve.this);
+        final LinearLayout content = new LinearLayout(SyntheseEleve3.this);
+        final Button bStart = new Button(SyntheseEleve3.this);
+        final Button bStop = new Button(SyntheseEleve3.this);
         bStop.setText("stop");
         bStop.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -356,6 +344,8 @@ public class SyntheseEleve extends AppCompatActivity {
         d.setView(content);
         d.show();
 
+
+
         //////////////////////////////////////////////////////////////////
         return newSong;
     }
@@ -377,7 +367,7 @@ public class SyntheseEleve extends AppCompatActivity {
             if (photoFile != null) {
                 Log.e("teste", String.valueOf(photoFile));
                 Log.e("filepathgeo", getExternalFilesDir(Environment.DIRECTORY_PICTURES).getPath());
-                Uri photoURI = FileProvider.getUriForFile(SyntheseEleve.this,
+                Uri photoURI = FileProvider.getUriForFile(SyntheseEleve3.this,
                         "com.example.android.fileprovider",
                         photoFile);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
@@ -405,6 +395,10 @@ public class SyntheseEleve extends AppCompatActivity {
         Log.e("photofile", mCurrentPhotoPath);
         return image;
     }
+
+
+
+
 
     private String getFilePath() {
 
@@ -468,6 +462,5 @@ public class SyntheseEleve extends AppCompatActivity {
         }
         return entries;
     }
-
 
 }

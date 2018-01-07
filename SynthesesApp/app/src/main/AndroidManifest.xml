@@ -49,7 +49,8 @@
         <activity
             android:name=".Activity.Phase_1_Activity"
             android:label="@string/title_activity_phase_1_"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar" >
+        </activity>
         <activity
             android:name=".Activity.TeacherMainActivity"
             android:parentActivityName=".Activity.ConnexionActivity"
@@ -68,11 +69,8 @@
         </activity>
         <activity
             android:name=".Activity.SyntheseEleve"
-            android:parentActivityName=".Activity.StudentListActivity"
-            android:screenOrientation="portrait">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".Activity.StudentListActivity" />
+            android:label="SyntheseEleve"
+            android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
             android:name=".Activity.Phase_2_Activity"
@@ -81,7 +79,18 @@
         <activity
             android:name=".Activity.Phase_3_Activity"
             android:label="@string/title_activity_phase_3_"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity
+            android:name=".Activity.SyntheseEleve2"
+            android:label="SyntheseEleve"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity
+            android:name=".Activity.SyntheseEleve3"
+            android:label="SyntheseEleve"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
     </application>
 
 </manifest>
