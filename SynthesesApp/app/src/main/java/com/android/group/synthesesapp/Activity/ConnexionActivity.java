@@ -146,20 +146,13 @@ public class ConnexionActivity extends AppCompatActivity {
                             if (listPass.get(indexSymbole[0]).equals(userSelected.getsPwd())) {
                                 Toast.makeText(ConnexionActivity.this, "Connexion réussie", Toast.LENGTH_LONG).show();
                                 Intent intent = new Intent(ConnexionActivity.this, Phase_1_Activity.class);
-                                intent.putExtra("user", users.get(position));
+                                intent.putExtra("user", userSelected);
                                 startActivity(intent);
 
 
                             } else {
                                 Toast.makeText(ConnexionActivity.this, "Connexion echouée", Toast.LENGTH_LONG).show();
                             }
-                        }
-
-                        Log.d("choixSymbole", String.valueOf(indexSymbole[0]));
-                        if(indexSymbole[0]==position){
-                            Toast.makeText(ConnexionActivity.this, "Connexion réussie", Toast.LENGTH_LONG).show();
-                            Intent intent = new Intent(ConnexionActivity.this, Phase_1_Activity.class);
-                            startActivity(intent);
                         }
                         else {
                             JSONObject changeMdp = new JSONObject();
@@ -170,8 +163,9 @@ public class ConnexionActivity extends AppCompatActivity {
                                 e.printStackTrace();
                             }
                             requetePost(changeMdp, "http://193.190.248.154/setElevePwd.php");
+                            userSelected.setsPwd(listPass.get(indexSymbole[0]));
                             Intent intent = new Intent(ConnexionActivity.this, Phase_1_Activity.class);
-                            intent.putExtra("user", users.get(position));
+                            intent.putExtra("user", userSelected);
                             startActivity(intent);
 
                         }

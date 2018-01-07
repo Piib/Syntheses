@@ -154,40 +154,6 @@ public class Phase_1_Activity extends AppCompatActivity {
         });
     }
 
-    private ArrayList<Entry> getListEntry(int userId, int phase) throws IOException {
-
-        OkHttpClient client = new OkHttpClient();
-        final Request request = new Request.Builder()
-                .url("http://artshared.fr/andev1/distribue/android/get_game.php?uid=")
-                .build();
-        Response response = client.newCall(request).execute();
-        String mMessage = response.body().string();
-        ArrayList<Entry> listEntry = new ArrayList<>();
-        if (response.isSuccessful()) {
-            Log.e("error avant try ini", String.valueOf(userId)+" "+String.valueOf(phase));
-            try {
-                JSONObject jReponse = new JSONObject(mMessage);
-                JSONArray jListEntry = new JSONArray(jReponse.getString("Entries"));
-                if (jListEntry!= null) {
-                    for (int i = 0; i < jListEntry.length(); i++) {
-                        JSONObject jEntry = new JSONObject(jListEntry.get(i).toString());
-                        String type = jEntry.getString("type");
-                        String contenu = jEntry.getString("content");
-                        int order = jEntry.getInt("order");
-
-                    }
-                }
-            } catch (Exception e) {
-                Log.d("errorTry", "plantage");
-                e.printStackTrace();
-            }
-            Log.d("error apres init", " oui");
-
-        }
-        return listEntry;
-
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
