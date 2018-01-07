@@ -36,6 +36,7 @@ import com.android.group.synthesesapp.Adapater.EnonceAdapter;
 import com.android.group.synthesesapp.Adapater.ReformuleAdapter;
 import com.android.group.synthesesapp.Fragment.ConnexionFragment;
 import com.android.group.synthesesapp.Modele.Entry;
+import com.android.group.synthesesapp.Modele.User;
 import com.android.group.synthesesapp.R;
 
 import org.json.JSONArray;
@@ -63,6 +64,7 @@ public class Phase_1_Activity extends AppCompatActivity {
     private String mCurrentPhotoPath;
     private ArrayList<Entry> enconceList;
     private ArrayList<Entry> reformuleList;
+    private User user;
 
     //affiche le menu dans l'action bar
     @Override
@@ -76,7 +78,7 @@ public class Phase_1_Activity extends AppCompatActivity {
         Toast.makeText(this, "click", Toast.LENGTH_LONG).show();
         JSONObject listEnvoie = new JSONObject();
         try {
-            listEnvoie.put("userId", 9);
+            listEnvoie.put("userId", user.getiIdu());
             listEnvoie.put("phase", 1);
             JSONArray arrayEntries = new JSONArray();
             for(Entry entry : reformuleList){
@@ -160,6 +162,8 @@ public class Phase_1_Activity extends AppCompatActivity {
         setContentView(R.layout.activity_phase_1_);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        user = getIntent().getParcelableExtra("user");
+
 
 
         //Initialisation listeEnoncé
