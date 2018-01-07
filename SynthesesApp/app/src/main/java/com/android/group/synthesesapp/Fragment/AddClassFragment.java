@@ -35,8 +35,6 @@ import com.android.group.synthesesapp.R;
  * Created by Piib on 31-12-17.
  */
 
-//source SendPostRequest, GetPostDataString: https://www.studytutorial.in/android-httpurlconnection-post-and-get-request-tutorial
-
 public class AddClassFragment extends DialogFragment{
     boolean regenerateListView=false;
     EditText champClasse;
@@ -52,7 +50,6 @@ public class AddClassFragment extends DialogFragment{
 
         champClasse=(EditText) rootView.findViewById(R.id.classe);
 
-        //bouton ajout et listener
         Button ajout = (Button) rootView.findViewById(R.id.ajouter);
         ajout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,7 +63,6 @@ public class AddClassFragment extends DialogFragment{
             }
         });
 
-        //bouton annuler et listener (dismiss si cliqué)
         Button annuler = (Button) rootView.findViewById(R.id.annuler);
         annuler.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,7 +74,7 @@ public class AddClassFragment extends DialogFragment{
         return rootView;
     }
 
-    //redéfinition de la méthode onDismiss qui renvoie à la méthode du méme champNom de TeacherMainActivity
+    //redéfinition de la méthode onDismiss qui renvoie à la méthode du méme nom de TeacherMainActivity
     @Override
     public void onDismiss(DialogInterface dialog) {
         super.onDismiss(dialog);
@@ -88,6 +84,8 @@ public class AddClassFragment extends DialogFragment{
         }
     }
 
+    //source pour l'ajout et envoi de l'image: https://www.android-examples.com/android-select-image-from-gallery-upload-to-server-example/
+
     public class SendPostRequest extends AsyncTask<String, Void, String> {
 
         protected void onPreExecute(){}
@@ -96,7 +94,7 @@ public class AddClassFragment extends DialogFragment{
 
             try {
 
-                URL url = new URL("http://193.190.248.154/lien_prof_classe.php"); // here is your URL path
+                URL url = new URL("http://193.190.248.154/lien_prof_classe.php");
 
                 JSONObject postDataParams = new JSONObject();
                 postDataParams.put("Nom", nomProf);
@@ -161,7 +159,7 @@ public class AddClassFragment extends DialogFragment{
                         .create();
                 ad.setCancelable(false);
                 ad.setTitle("Classe non existante");
-                ad.setMessage("La classe n'existe pas. Pour créer une classe créez un elève dans cette classe et ensuite ajoutez la");
+                ad.setMessage("La classe n'existe pas. Pour créer une classe créez un elève dans cette classe et ensuite ajoutez la.");
                 ad.setButton("OK", new DialogInterface.OnClickListener() {
 
                     public void onClick(DialogInterface dialog, int which) {
@@ -176,10 +174,11 @@ public class AddClassFragment extends DialogFragment{
 
             if(result.matches("LinkV")){
                 regenerateListView=true;
+                Toast.makeText(getActivity(), "Classe ajoutée avec succès", Toast.LENGTH_SHORT).show();
                 dismiss();
-                //Toast.makeText(getActivity(), "Classe ajoutée avec succès", Toast.LENGTH_SHORT).show();
             }
 
+            //réponses du serveur si les entrées ne sont pas dans un bon format
             if(!result.matches("UserX")&& !result.matches("ClassX")&& !result.matches("LinkX")&& !result.matches("LinkV")){
                 Toast.makeText(getActivity(), result, Toast.LENGTH_SHORT).show();
             }

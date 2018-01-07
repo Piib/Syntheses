@@ -9,7 +9,7 @@ import android.app.Application;
 //pour le partage de valeurs
 //source: https://stackoverflow.com/questions/8573796/keeping-a-variable-value-across-all-android-activities
 
-public class MyApplication extends Application {
+public class Share extends Application {
     public String nomProf="";
     public String prenomProf="";
     public String classe="";

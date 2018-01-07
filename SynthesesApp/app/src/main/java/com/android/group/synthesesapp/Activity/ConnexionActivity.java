@@ -3,7 +3,6 @@ package com.android.group.synthesesapp.Activity;
 import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.DataSetObserver;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -16,12 +15,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.GridView;
-import android.widget.ListAdapter;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.group.synthesesapp.Adapater.PasswordAdapter;
@@ -102,16 +97,6 @@ public class ConnexionActivity extends AppCompatActivity {
         final ArrayList<User> users;
 
         users = appelServeur("http://193.190.248.154/getAllStudent.php");
-
-
-//        try {
-//            users=getListUser();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-
-
-
         userAdapter = new UserAdapter(getApplicationContext(), users);
 
         GridView gridUser = (GridView) findViewById(R.id.gridUser);
@@ -155,8 +140,9 @@ public class ConnexionActivity extends AppCompatActivity {
                 builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+
                         if(userSelected.getsPwd().length()!=0) {
-                            Log.e("ca passe", listPass.get(indexSymbole[0])+" - "+userSelected.getsPwd());
+                            Log.e("ca passe", listPass.get(indexSymbole[0]) + " - " + userSelected.getsPwd());
                             if (listPass.get(indexSymbole[0]).equals(userSelected.getsPwd())) {
                                 Toast.makeText(ConnexionActivity.this, "Connexion réussie", Toast.LENGTH_LONG).show();
                                 Intent intent = new Intent(ConnexionActivity.this, Phase_1_Activity.class);
@@ -167,6 +153,13 @@ public class ConnexionActivity extends AppCompatActivity {
                             } else {
                                 Toast.makeText(ConnexionActivity.this, "Connexion echouée", Toast.LENGTH_LONG).show();
                             }
+                        }
+
+                        Log.d("choixSymbole", String.valueOf(indexSymbole[0]));
+                        if(indexSymbole[0]==position){
+                            Toast.makeText(ConnexionActivity.this, "Connexion réussie", Toast.LENGTH_LONG).show();
+                            Intent intent = new Intent(ConnexionActivity.this, Phase_1_Activity.class);
+                            startActivity(intent);
                         }
                         else {
                             JSONObject changeMdp = new JSONObject();
@@ -193,13 +186,6 @@ public class ConnexionActivity extends AppCompatActivity {
                 builder.show();
             }
         });
-
-
-
-
-
-
-
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -253,9 +239,10 @@ public class ConnexionActivity extends AppCompatActivity {
     //listener de l'action connexion du menu
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        //afficher le fragment pour la connexion du professeur
         FragmentManager fm = getSupportFragmentManager();
         ConnexionFragment dialogFragment = new ConnexionFragment ();
-        dialogFragment.show(fm, "frgament_connexion");
+        dialogFragment.show(fm, "fragment_connexion");
         return true;
     }
 

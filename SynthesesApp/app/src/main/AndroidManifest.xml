@@ -25,7 +25,13 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+<<<<<<< HEAD
         android:theme="@style/AppTheme">
+=======
+        android:theme="@style/AppTheme"
+        android:name=".Tool.Share">
+
+>>>>>>> 430460f29357cbcb0bc498decf08289ee8e417ca
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="com.example.android.fileprovider"
