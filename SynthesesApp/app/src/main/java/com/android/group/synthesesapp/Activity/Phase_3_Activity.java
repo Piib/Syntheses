@@ -30,7 +30,6 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.android.group.synthesesapp.Adapater.EnonceAdapter;
 import com.android.group.synthesesapp.Adapater.ReformuleAdapter;
 import com.android.group.synthesesapp.Modele.Entry;
 import com.android.group.synthesesapp.Modele.User;
@@ -57,7 +56,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class Phase_2_Activity extends AppCompatActivity {
+public class Phase_3_Activity extends AppCompatActivity {
 
     private String mCurrentPhotoPath;
     private ArrayList<Entry> reformuleList;
@@ -77,7 +76,7 @@ public class Phase_2_Activity extends AppCompatActivity {
         JSONObject listEnvoie = new JSONObject();
         try {
             listEnvoie.put("userId", user.getiIdu());
-            listEnvoie.put("phase", 2);
+            listEnvoie.put("phase", 3);
             JSONArray arrayEntries = new JSONArray();
             for(Entry entry : ajoutListe){
                 JSONObject jEntry = new JSONObject();
@@ -111,9 +110,6 @@ public class Phase_2_Activity extends AppCompatActivity {
             listEnvoie.put("entries", arrayEntries);
             Log.e("resultat", listEnvoie.toString());
             requetePost(listEnvoie, "http://193.190.248.154/ajoutNote.php");
-            Intent intent = new Intent(Phase_2_Activity.this, Phase_3_Activity.class);
-            intent.putExtra("user", user);
-            startActivity(intent);
         }
         catch (Exception e){
             e.printStackTrace();
@@ -170,7 +166,7 @@ public class Phase_2_Activity extends AppCompatActivity {
         //Initialisation listeEnoncé
 
         //Initialisation listReformulé
-        reformuleList = appelServeur("http://193.190.248.154/getNote.php?userId="+user.getiIdu()+"&&phase=2");
+        reformuleList = appelServeur("http://193.190.248.154/getNote.php?userId="+user.getiIdu()+"&&phase=3");
         ajoutListe=new ArrayList<>();
 
         final ListView listReformule = (ListView) findViewById(R.id.listReformule);
@@ -179,13 +175,13 @@ public class Phase_2_Activity extends AppCompatActivity {
         listReformule.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(Phase_2_Activity.this);
+                AlertDialog.Builder builder = new AlertDialog.Builder(Phase_3_Activity.this);
 
-                ImageView imv = new ImageView(Phase_2_Activity.this);
+                ImageView imv = new ImageView(Phase_3_Activity.this);
                 imv.setImageDrawable(getDrawable(R.drawable.icone_delete));
                 imv.setMinimumWidth(500);
                 imv.setMinimumHeight(500);
-                RelativeLayout rl = new RelativeLayout(Phase_2_Activity.this);
+                RelativeLayout rl = new RelativeLayout(Phase_3_Activity.this);
                 rl.addView(imv);
 
                 builder
@@ -234,7 +230,7 @@ public class Phase_2_Activity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 final int[] choix = {-1};
-                AlertDialog.Builder builder = new AlertDialog.Builder(Phase_2_Activity.this);
+                AlertDialog.Builder builder = new AlertDialog.Builder(Phase_3_Activity.this);
                 builder.setTitle("Ajouter +");
 //                builder.setMessage("ok");
                 builder.setSingleChoiceItems(choixAjout, -1, new DialogInterface.OnClickListener() {
@@ -274,10 +270,10 @@ public class Phase_2_Activity extends AppCompatActivity {
 
     private Entry newText(final ReformuleAdapter reformuleAdapter) {
         final Entry newText = new Entry(0, "text", null, reformuleList.size());
-        AlertDialog.Builder builder= new AlertDialog.Builder(Phase_2_Activity.this);
+        AlertDialog.Builder builder= new AlertDialog.Builder(Phase_3_Activity.this);
         builder.setTitle("TEXTE");
-        RelativeLayout content = new RelativeLayout(Phase_2_Activity.this);
-        final EditText textView = new EditText(Phase_2_Activity.this);
+        RelativeLayout content = new RelativeLayout(Phase_3_Activity.this);
+        final EditText textView = new EditText(Phase_3_Activity.this);
         content.addView(textView);
         textView.setMinWidth(content.getMeasuredWidth());
         builder.setView(content);
@@ -308,12 +304,12 @@ public class Phase_2_Activity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        final AlertDialog.Builder builder = new AlertDialog.Builder(Phase_2_Activity.this);
+        final AlertDialog.Builder builder = new AlertDialog.Builder(Phase_3_Activity.this);
         final AlertDialog d = builder.create();
         d.setTitle("SON");
-        final LinearLayout content = new LinearLayout(Phase_2_Activity.this);
-        final Button bStart = new Button(Phase_2_Activity.this);
-        final Button bStop = new Button(Phase_2_Activity.this);
+        final LinearLayout content = new LinearLayout(Phase_3_Activity.this);
+        final Button bStart = new Button(Phase_3_Activity.this);
+        final Button bStop = new Button(Phase_3_Activity.this);
         bStop.setText("stop");
         bStop.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -370,7 +366,7 @@ public class Phase_2_Activity extends AppCompatActivity {
             if (photoFile != null) {
                 Log.e("teste", String.valueOf(photoFile));
                 Log.e("filepathgeo", getExternalFilesDir(Environment.DIRECTORY_PICTURES).getPath());
-                Uri photoURI = FileProvider.getUriForFile(Phase_2_Activity.this,
+                Uri photoURI = FileProvider.getUriForFile(Phase_3_Activity.this,
                         "com.example.android.fileprovider",
                         photoFile);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);

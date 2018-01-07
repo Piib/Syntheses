@@ -5,8 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.android.group.synthesesapp.Activity.Phase_2_Activity"
-    tools:showIn="@layout/activity_phase_2_">
+    tools:context="com.android.group.synthesesapp.Activity.Phase_3_Activity"
+    tools:showIn="@layout/activity_phase_3_">
 
     <ListView
         android:layout_width="match_parent"

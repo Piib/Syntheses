@@ -53,7 +53,7 @@ public class ReformuleAdapter extends ArrayAdapter<Entry> {
         switch (e.getsType()){
             case "text" :
                 text.setVisibility(View.VISIBLE);
-                text.setText("texte "+e.getsContenu());
+                text.setText(e.getsContenu());
                 break;
             case "son" :
                 son.setVisibility(View.VISIBLE);

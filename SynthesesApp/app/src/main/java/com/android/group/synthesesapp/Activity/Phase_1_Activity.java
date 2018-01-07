@@ -30,6 +30,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import com.android.group.synthesesapp.Adapater.EnonceAdapter;
@@ -38,13 +39,16 @@ import com.android.group.synthesesapp.Fragment.ConnexionFragment;
 import com.android.group.synthesesapp.Modele.Entry;
 import com.android.group.synthesesapp.Modele.User;
 import com.android.group.synthesesapp.R;
+import com.android.group.synthesesapp.Tool.BackgroundTask;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -64,6 +68,7 @@ public class Phase_1_Activity extends AppCompatActivity {
     private String mCurrentPhotoPath;
     private ArrayList<Entry> enconceList;
     private ArrayList<Entry> reformuleList;
+    private ArrayList<Entry> ajoutListe;
     private User user;
 
     //affiche le menu dans l'action bar
@@ -81,7 +86,7 @@ public class Phase_1_Activity extends AppCompatActivity {
             listEnvoie.put("userId", user.getiIdu());
             listEnvoie.put("phase", 1);
             JSONArray arrayEntries = new JSONArray();
-            for(Entry entry : reformuleList){
+            for(Entry entry : ajoutListe){
                 JSONObject jEntry = new JSONObject();
                 jEntry.put("order", entry.getiOrder());
                 jEntry.put("type", entry.getsType());
@@ -113,6 +118,9 @@ public class Phase_1_Activity extends AppCompatActivity {
             listEnvoie.put("entries", arrayEntries);
             Log.e("resultat", listEnvoie.toString());
             requetePost(listEnvoie, "http://193.190.248.154/ajoutNote.php");
+            Intent intent = new Intent(Phase_1_Activity.this, Phase_2_Activity.class);
+            intent.putExtra("user", user);
+            startActivity(intent);
         }
         catch (Exception e){
             e.printStackTrace();
@@ -182,7 +190,8 @@ public class Phase_1_Activity extends AppCompatActivity {
 
 
         //Initialisation listReformulé
-        reformuleList = new ArrayList<>();
+        reformuleList = appelServeur("http://193.190.248.154/getNote.php?userId="+user.getiIdu()+"&&phase=1");
+        ajoutListe=new ArrayList<>();
 
         final ListView listReformule = (ListView) findViewById(R.id.listReformule);
         final ReformuleAdapter reformuleAdapter = new ReformuleAdapter(getBaseContext(), 0, reformuleList);
@@ -204,6 +213,20 @@ public class Phase_1_Activity extends AppCompatActivity {
                         .setPositiveButton("Ok",  new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int id) {
+                                if(ajoutListe.indexOf(reformuleList.get(position))==-1){
+                                    Log.e("deleteTruc", "est du serveur");
+                                    JSONObject jObject = new JSONObject();
+                                    try {
+                                        jObject.put("order", reformuleList.get(position).getiOrder());
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                    requetePost(jObject, "http://193.190.248.154/deleteNote.php");
+                                }
+                                else {
+                                    Log.e("deleteTruc", "estPasServeur");
+                                    ajoutListe.remove(reformuleList.get(position));
+                                }
                                 reformuleList.remove(position);
                                 reformuleAdapter.notifyDataSetChanged();
                             }
@@ -246,17 +269,20 @@ public class Phase_1_Activity extends AppCompatActivity {
                         if(choix[0]==0) {
                             Entry newEntry = newText(reformuleAdapter);
                             reformuleList.add(newEntry);
+                            ajoutListe.add(newEntry);
                             reformuleAdapter.notifyDataSetChanged();
                         }
                         if(choix[0]==1) {
                             Entry newEntry = newAudio(reformuleAdapter);
                             reformuleList.add(newEntry);
+                            ajoutListe.add(newEntry);
                             reformuleAdapter.notifyDataSetChanged();
 
                         }
                         if(choix[0]==2) {
                             Entry newEntry = newImage(reformuleAdapter);
                             reformuleList.add(newEntry);
+                            ajoutListe.add(newEntry);
                             reformuleAdapter.notifyDataSetChanged();
                         }
                     }
@@ -407,6 +433,57 @@ public class Phase_1_Activity extends AppCompatActivity {
         String d=String.valueOf(new Date().getTime());
         file = new File(filepath, "Synthese/SoundRecorded_"+d);
         return (file.getAbsolutePath() + ".mp4");
+    }
+
+    public ArrayList<Entry> appelServeur(String url){
+        BackgroundTask bgTask = new BackgroundTask();
+        String [] param = new String[1];
+        param[0]="ole";
+        ArrayList<Entry> entries = new ArrayList<>();
+        try {
+            JSONArray jArray = new JSONArray(bgTask.execute(url).get());
+            if (jArray != null) {
+                Log.e("if", "vrai");
+                for (int i = 0; i < jArray.length(); i++) {
+                    JSONObject jEntry = new JSONObject(jArray.get(i).toString());
+                    int order = jEntry.getInt("order");
+                    String type = jEntry.getString("type");
+                    String content = jEntry.getString("content");
+                    switch (type){
+                        case "image":{
+                            String imageName = "image_"+new Date().getTime();
+                            byte[] pdfAsBytes = Base64.decode(content, 0);
+                            File filePath = new File(Environment.getExternalStorageDirectory()+"/"+imageName+".jpg");
+                            FileOutputStream os = new FileOutputStream(filePath, true);
+                            os.write(pdfAsBytes);
+                            os.close();
+                            content=Environment.getExternalStorageDirectory()+"/"+imageName+".jpg";
+                            break;
+                        }
+                        case "son":{
+                            String sonName = "son"+new Date().getTime();
+                            byte[] pdfAsBytes = Base64.decode(content, 0);
+                            File filePath = new File(Environment.getExternalStorageDirectory()+"/"+sonName+".jpg");
+                            FileOutputStream os = new FileOutputStream(filePath, true);
+                            os.write(pdfAsBytes);
+                            os.close();
+                            content=Environment.getExternalStorageDirectory()+"/"+sonName+".jpg";
+                            break;
+                        }
+                    }
+                    Entry e = new Entry(0, type, content, order);
+                    entries.add(e);
+                }
+            }
+            else {
+                Log.e("else", "faux");
+            }
+            Log.e("laListe", entries.toString());
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return entries;
     }
 
 }
