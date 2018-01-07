@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.android.group.synthesesapp.R;
 import com.android.group.synthesesapp.Tool.Share;
@@ -20,6 +21,7 @@ public class SyntheseEleve extends AppCompatActivity {
         setContentView(R.layout.activity_synthseeleve);
 
         setTitle("Synthèse de " + ((Share) getApplicationContext()).nomEleve + " " +((Share) getApplicationContext()).prenomEleve);
+        //((Share) getApplicationContext()).idEleve
     }
 
     @Override

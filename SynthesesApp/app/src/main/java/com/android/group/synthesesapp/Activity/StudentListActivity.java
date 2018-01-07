@@ -38,6 +38,7 @@ public class StudentListActivity extends AppCompatActivity {
     private ListView eleves_listView;
     private ArrayList<String> eleve_aList;
     private ArrayAdapter<String> listAdapter ;
+    private ArrayList<Integer> id_aList; //contient l'id de chaque élève pour l'envoyer a l'activité suivante
     private String[] listeEleves, manipulationNom;
     private String nomCompletEleve,prenomEleve,nomEleve,typeRequete; //typeRequete différencie le chargement de la suppresion pour la requête serveur
     private URL url; //URL pour les requêtes Load ou Delete
@@ -58,11 +59,15 @@ public class StudentListActivity extends AppCompatActivity {
 
         eleve_aList = new ArrayList<String>();
 
+        id_aList = new ArrayList<Integer>();
+
         //découpe encore une fois le resultat de la requête pour obtenir le nom et prénom de l'élève
         for(int i = 0; i< listeEleves.length; i++){
             manipulationNom = listeEleves[i].split(":");
             nomCompletEleve =manipulationNom[0]+" "+manipulationNom[1];
             eleve_aList.add(nomCompletEleve);
+            //recupère l'idUser et ajout dans l'ordre de la liste
+            id_aList.add(Integer.parseInt(manipulationNom[2]));
         }
 
         listAdapter = new ArrayAdapter<String>(this, R.layout.simplerow_eleve, eleve_aList);
@@ -193,6 +198,8 @@ public class StudentListActivity extends AppCompatActivity {
             prenomEleve=item.substring(espace+1);
             ((Share) getApplicationContext()).nomEleve=nomEleve;
             ((Share) getApplicationContext()).prenomEleve=prenomEleve;
+            //on connait l'idUser en le récupérant de id_aList avec la position dans la liste
+            ((Share) getApplicationContext()).idEleve=id_aList.get(position);
 
             Intent intent = new Intent(getApplicationContext(), SyntheseEleve.class);
             startActivity(intent);
