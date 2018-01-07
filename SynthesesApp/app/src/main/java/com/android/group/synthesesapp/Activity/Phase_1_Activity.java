@@ -65,7 +65,7 @@ import okhttp3.Response;
 public class Phase_1_Activity extends AppCompatActivity {
 
     private String mCurrentPhotoPath;
-    private ArrayList<Entry> enconceList;
+//    private ArrayList<Entry> enconceList;
     private ArrayList<Entry> reformuleList;
     private ArrayList<Entry> ajoutListe;
     private User user;
@@ -172,6 +172,7 @@ public class Phase_1_Activity extends AppCompatActivity {
         user = getIntent().getParcelableExtra("user");
 
         //Initialisation listeEnoncé
+<<<<<<< HEAD
         enconceList = new ArrayList<>();
 
         enconceList.add(new Entry(0, "typeEnonce0", "conetenu", 0));
@@ -182,6 +183,20 @@ public class Phase_1_Activity extends AppCompatActivity {
         ListView listEnonce = (ListView) findViewById(R.id.listEnonce);
         EnonceAdapter enonceAdapter = new EnonceAdapter(getBaseContext(), 0, enconceList);
         listEnonce.setAdapter(enonceAdapter);
+=======
+//        enconceList = new ArrayList<>();
+//
+//
+//
+//        enconceList.add(new Entry(0, "typeEnonce0", "conetenu", 0));
+//        enconceList.add(new Entry(1, "typeEnonce1", "conetenu", 1));
+//        enconceList.add(new Entry(2, "typeEnonce2", "conetenu", 2));
+//        enconceList.add(new Entry(3, "typeEnonce3", "conetenu", 3));
+//
+//        ListView listEnonce = (ListView) findViewById(R.id.listEnonce);
+//        EnonceAdapter enonceAdapter = new EnonceAdapter(getBaseContext(), 0, enconceList);
+//        listEnonce.setAdapter(enonceAdapter);
+>>>>>>> master
 
         //Initialisation listReformulé
         reformuleList = appelServeur("http://193.190.248.154/getNote.php?userId="+user.getiIdu()+"&&phase=1");
