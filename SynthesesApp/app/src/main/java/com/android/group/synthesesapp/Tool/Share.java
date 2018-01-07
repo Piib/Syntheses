@@ -15,4 +15,5 @@ public class Share extends Application {
     public String classe="";
     public String nomEleve="";
     public String prenomEleve="";
+    public int idEleve=0;
 }
