@@ -175,11 +175,6 @@ public class SyntheseEleve extends AppCompatActivity {
         enconceList = new ArrayList<>();
 
 
-
-        ListView listEnonce = (ListView) findViewById(R.id.listEnonce);
-        EnonceAdapter enonceAdapter = new EnonceAdapter(getBaseContext(), 0, enconceList);
-        listEnonce.setAdapter(enonceAdapter);
-
         //Initialisation listReformulé
         reformuleList = appelServeur("http://193.190.248.154/getNote.php?userId="+((Share) getApplicationContext()).idEleve+"&&phase=1");
         ajoutListe=new ArrayList<>();
